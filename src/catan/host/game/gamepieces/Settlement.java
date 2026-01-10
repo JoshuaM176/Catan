@@ -1,5 +1,14 @@
 package catan.host.game.gamepieces;
 
-public class Settlement {
+import catan.host.game.board.resources.Resource;
+import catan.host.game.board.resources.ResourceListener;
+
+public class Settlement implements ResourceListener{
+
+    @Override
+    public void addResource(Resource resource) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addResource'");
+    }
     
 }

@@ -1,4 +1,4 @@
-package catan.host.game;
+package catan.host.game.board.resources;
 
 public enum Resource{
     STONE,
@@ -6,5 +6,5 @@ public enum Resource{
     WHEAT,
     LOGS,
     SHEEP,
-    DESERT
+    DESERT;
 }
