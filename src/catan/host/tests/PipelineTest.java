@@ -1,17 +1,18 @@
 package catan.host.tests;
 
-import catan.host.game.board.tile.numbertokenassigner.DefaultNumberTokenAssigner;
-import catan.host.game.board.tile.numbertokenassigner.NumberTokenAssigner;
-import catan.host.game.board.tile.tilecreator.DefaultTileCreator;
-import catan.host.game.board.tile.tilecreator.TileCreator;
-
-import java.util.Arrays;
 import java.util.Map;
 
 import catan.host.game.board.Board;
 import catan.host.game.board.resources.Resource;
+import catan.host.game.board.tile.numbertokenassigner.DefaultNumberTokenAssigner;
+import catan.host.game.board.tile.numbertokenassigner.NumberTokenAssigner;
+import catan.host.game.board.tile.tilecreator.DefaultTileCreator;
+import catan.host.game.board.tile.tilecreator.TileCreator;
+import catan.host.game.gamepieces.City;
+import catan.host.game.player.Player;
 
-public class TokenAssignTest {
+public class PipelineTest {
+   
     public static void main(String[] args) {
         int[][] tilePattern = new int[][] {
             {0,1,1,1,0},
@@ -32,10 +33,12 @@ public class TokenAssignTest {
         ));
         Board board = new Board(tilePattern, numberTokens, numberTokenAssigner, tileCreator);
         System.out.println(board);
-        System.out.println(Arrays.toString(board.tiles[0][1].edges));
-        System.out.println(Arrays.toString(board.tiles[0][2].edges));
-        System.out.println(Arrays.toString(board.tiles[1][1].edges));
-        System.out.println(Arrays.toString(board.tiles[2][1].edges));
-        System.out.println(Arrays.toString(board.tiles[2][2].edges));
+        Player player = new Player();
+        City city = new City(player);
+        board.tiles[0][1].vertices[1].setPlacedItem(city);
+        for(int i = 0; i < 20; i++) {
+            System.out.println(board.rollDice());
+        }
+        System.out.println(player);
     }
 }

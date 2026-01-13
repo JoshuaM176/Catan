@@ -1,5 +1,7 @@
 package catan.host.game.board;
 
-public class VertexPlaceable {
+import catan.host.game.board.resources.ResourceListener;
+
+public interface VertexPlaceable extends ResourceListener{
     
 }

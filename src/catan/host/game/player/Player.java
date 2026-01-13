@@ -8,7 +8,7 @@ import java.util.Map;
 import catan.host.game.board.resources.Resource;
 
 public class Player implements ResourceListener{
-    Map<Resource, Integer> resources = new HashMap<Resource, Integer>();
+    Map<Resource, Integer> resources = new HashMap<Resource, Integer>(); // Card Resources
 
     @Override
     public void addResource(Resource resource) {
@@ -18,5 +18,13 @@ public class Player implements ResourceListener{
         else {
             resources.put(resource, 1);
         }
+    }
+
+    public String toString() {
+        String string = "";
+        for(Resource resource: resources.keySet()) {
+            string += resource.name() + " :: " + resources.get(resource);
+        }
+        return string;
     }
 }

@@ -6,6 +6,5 @@ public class DesertTile extends Tile{
 
     public DesertTile() {
         super(Resource.DESERT);
-        hasRobber = true;
     }
 }
