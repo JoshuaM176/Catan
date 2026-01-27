@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import luis.josh.catan.host.game.board.Board;
+import luis.josh.catan.host.game.player.Player;
 
 public class RollDice implements Action{
     
@@ -14,7 +15,7 @@ public class RollDice implements Action{
     }
 
     @Override
-    public JSONObject execute(JSONObject data) {
+    public JSONObject execute(JSONObject data, Player player) {
         int result = board.rollDice();
         String jsonString = """
         {

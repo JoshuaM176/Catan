@@ -59,7 +59,7 @@ public class PipelineTest {
         RollDice rollDice = new RollDice(board);
         JSONObject jsonObject = new JSONObject();
         for(int i = 0; i < 20; i++) {
-            System.out.println(rollDice.execute(jsonObject));
+            System.out.println(rollDice.execute(jsonObject, player));
         }
         System.out.println(player);
 
@@ -94,7 +94,7 @@ public class PipelineTest {
             """
         );
         System.out.println(board.tiles[0][2].robber);
-        System.out.println(moveRobber.execute(test));
+        System.out.println(moveRobber.execute(test, player));
         System.out.println(board.tiles[0][2].robber);
     }
 }

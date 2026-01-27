@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 
 import luis.josh.catan.host.game.board.Board;
 import luis.josh.catan.host.game.board.tile.Tile;
+import luis.josh.catan.host.game.player.Player;
 
 public class MoveRobber implements Action {
 
@@ -14,16 +15,16 @@ public class MoveRobber implements Action {
     }
 
     @Override
-    public JSONObject execute(JSONObject data) {
+    public JSONObject execute(JSONObject data, Player player) {
         JSONObject source = (JSONObject)data.get("sourceTile");
         JSONObject target = (JSONObject)data.get("targetTile");
-        int sourceX = (int)(long)source.get("x");
-        int sourceY = (int)(long)source.get("y");
-        int targetX = (int)(long)target.get("x");
-        int targetY = (int)(long)target.get("y");
+        int sourceRow = (int)(long)source.get("row");
+        int sourceColumn = (int)(long)source.get("column");
+        int targetRow = (int)(long)target.get("row");
+        int targetColumn = (int)(long)target.get("column");
 
-        Tile sourceTile = board.tiles[sourceY][sourceX];
-        Tile targetTile = board.tiles[targetY][targetX];
+        Tile sourceTile = board.tiles[sourceRow][sourceColumn];
+        Tile targetTile = board.tiles[targetRow][targetColumn];
         if(sourceTile.robber == null) {
             return null; //TODO
         }
