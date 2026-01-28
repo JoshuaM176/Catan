@@ -22,5 +22,8 @@ public class Settlement implements VertexPlaceable{
     public void addHarbor(Harbor harbor) {
         player.harbors.add(harbor);
     }
-    
+ 
+    public Player getPlayer() {
+        return player;
+    }
 }

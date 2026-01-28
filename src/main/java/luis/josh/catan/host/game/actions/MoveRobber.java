@@ -19,9 +19,9 @@ public class MoveRobber implements Action {
         JSONObject source = (JSONObject)data.get("sourceTile");
         JSONObject target = (JSONObject)data.get("targetTile");
         int sourceRow = (int)(long)source.get("row");
-        int sourceColumn = (int)(long)source.get("column");
+        int sourceColumn = (int)(long)source.get("col");
         int targetRow = (int)(long)target.get("row");
-        int targetColumn = (int)(long)target.get("column");
+        int targetColumn = (int)(long)target.get("col");
 
         Tile sourceTile = board.tiles[sourceRow][sourceColumn];
         Tile targetTile = board.tiles[targetRow][targetColumn];
@@ -33,7 +33,7 @@ public class MoveRobber implements Action {
         }
         targetTile.robber = sourceTile.robber;
         sourceTile.robber = null;
-        data.put("event","robberMoved");
+        data.put("event","moveRobber");
         return data;
     }
     

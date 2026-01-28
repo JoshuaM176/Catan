@@ -82,7 +82,6 @@ public class DefaultHarborAssigner implements HarborAssigner{
 
         double spaceBetweenHarbors = (double)coasts.size() / numHarbors;
         for(double i = spaceBetweenHarbors; i < coasts.size(); i += spaceBetweenHarbors) {
-        System.out.println(harborsAssigned);
             int index = (int)Math.floor(i);
             assignHarbor(coastTiles.get(index), coasts.get(index));
         }

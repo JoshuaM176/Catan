@@ -22,5 +22,8 @@ public class City implements VertexPlaceable{
     @Override
     public void addHarbor(Harbor harbor) {
     }
-    
+
+    public Player getPlayer() {
+        return player;
+    }
 }

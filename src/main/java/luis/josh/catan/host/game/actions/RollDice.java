@@ -19,7 +19,7 @@ public class RollDice implements Action{
         int result = board.rollDice();
         String jsonString = """
         {
-            "event": "diceRolled",
+            "event": "rollDice",
             "data": {
                 "numberRolled": %d
             }
