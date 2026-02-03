@@ -1,8 +1,11 @@
 package luis.josh.catan.host.game.actions;
 
+import java.util.Map;
+
 import org.json.simple.JSONObject;
 
 import luis.josh.catan.host.game.board.Board;
+import luis.josh.catan.host.game.board.resources.Resource;
 import luis.josh.catan.host.game.board.tile.Tile;
 import luis.josh.catan.host.game.gamepieces.Road;
 import luis.josh.catan.host.game.player.Player;
@@ -11,10 +14,12 @@ import luis.josh.catan.host.game.player.Player;
 
 public class PlaceRoad implements Action{
 
-    Board board;
+    private Board board;
+    private Map<Resource, Integer> resourceCost;
 
-    public PlaceRoad(Board board) {
+    public PlaceRoad(Board board, Map<Resource, Integer> resourceCost) {
         this.board = board;
+        this.resourceCost = resourceCost;
     }
 
     @Override
@@ -24,6 +29,7 @@ public class PlaceRoad implements Action{
         int row = (int)(long)location.get("row");
         int col = (int)(long)location.get("col");
         int edge = (int)(long)location.get("edge");
+
         Tile tile = board.tiles[row][col];
         if(tile == null) {
             return null; // TODO
@@ -36,6 +42,9 @@ public class PlaceRoad implements Action{
                 }
             }
             else if(!tile.vertices[edge].isConnected(player) && !tile.vertices[edge+1].isConnected(player)) {
+                return null; // TODO
+            }
+            if(!player.checkAndPurchase(resourceCost)) {
                 return null; // TODO
             }
         }

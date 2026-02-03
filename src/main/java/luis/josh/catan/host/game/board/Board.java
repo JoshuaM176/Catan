@@ -23,45 +23,84 @@ public class Board {
         return dice.rollDice();
     }
 
-    public boolean isValidPlacement(int row, int column, int vertex) {
-        Tile tile = tiles[row][column];
+    public boolean isValidPlacement(int row, int col, int vertex) {
+        Tile tile = tiles[row][col];
         if(tile.vertices[vertex].placedItem != null) {
             return false;
         }
-        int offset = (row % 2 == 0) ? 0 : 1;
         if(vertex == 0) {
-            if(hasNeighbor(row - 1, column - 1 + offset, 2)) { return false; }
-            if(hasNeighbor(row - 1, column, 4)) { return false; }
+            Tile[] tiles = getNeighborTiles(row, col, vertex);
+            if(hasNeighbor(tiles[1], 2)) { return false; }
+            if(hasNeighbor(tiles[2], 4)) { return false; }
         }
         if(vertex == 1) {
-            if(hasNeighbor(row - 1, column + offset, 3)) { return false; }
-            if(hasNeighbor(row, column + 1, 5)) { return false; }
+            Tile[] tiles = getNeighborTiles(row, col, vertex);
+            if(hasNeighbor(tiles[1], 3)) { return false; }
+            if(hasNeighbor(tiles[2], 5)) { return false; }
         }
         if(vertex == 2) {
-            if(hasNeighbor(row + 1, column + offset, 0)) { return false; }
-            if(hasNeighbor(row, column + 1, 4)) { return false; }
+            Tile[] tiles = getNeighborTiles(row, col, vertex);
+            if(hasNeighbor(tiles[1], 0)) { return false; }
+            if(hasNeighbor(tiles[2], 4)) { return false; }
         }
         if(vertex == 3) {
-            if(hasNeighbor(row + 1, column - 1 + offset, 1)) { return false; }
-            if(hasNeighbor(row + 1, column + offset, 5)) { return false; }
+            Tile[] tiles = getNeighborTiles(row, col, vertex);
+            if(hasNeighbor(tiles[1], 1)) { return false; }
+            if(hasNeighbor(tiles[2], 5)) { return false; }
         }
         if(vertex == 4) {
-            if(hasNeighbor(row + 1, column - 1 + offset, 0)) { return false; }
-            if(hasNeighbor(row, column - 1, 2)) { return false; }
+            Tile[] tiles = getNeighborTiles(row, col, vertex);
+            if(hasNeighbor(tiles[1], 0)) { return false; }
+            if(hasNeighbor(tiles[2], 2)) { return false; }
         }
         if(vertex == 5) {
-            if(hasNeighbor(row, column - 1, 1)) { return false; }
-            if(hasNeighbor(row - 1, column - 1 + offset, 3)) { return false; }
+            Tile[] tiles = getNeighborTiles(row, col, vertex);
+            if(hasNeighbor(tiles[1], 1)) { return false; }
+            if(hasNeighbor(tiles[2], 3)) { return false; }
         }
-        if(hasNeighbor(row, column, vertex)) { return false; }
+        if(hasNeighbor(getTile(row, col), vertex)) { return false; }
         return true;
     }
 
-    private boolean hasNeighbor(int row, int col, int vertex) {
-        if(row < 0 || row >= tiles.length || col < 0 || col > tiles[0].length) {
-            return false;
+    public Tile[] getNeighborTiles(int row, int col, int vertex) {
+        int offset = (row % 2 == 0) ? 0 : 1;
+        Tile[] tiles = new Tile[3];
+        tiles[0] = getTile(row, col);
+        if(vertex == 0) {
+            tiles[1] = getTile(row - 1, col -1 + offset);
+            tiles[2] = getTile(row -1, col);
         }
-        Tile tile = tiles[row][col];
+        if(vertex == 1) {
+            tiles[1] = getTile(row - 1, col + offset);
+            tiles[2] = getTile(row, col + 1);
+        }
+        if(vertex == 2) {
+            tiles[1] = getTile(row + 1, col + offset);
+            tiles[2] = getTile(row + 1, col + 1);
+        }
+        if(vertex == 3) {
+            tiles[1] = getTile(row + 1, col - 1 + offset);
+            tiles[2] = getTile(row + 1, col + offset);
+        }
+        if(vertex == 4) {
+            tiles[1] = getTile(row + 1, col - 1 + offset);
+            tiles[2] = getTile(row, col - 1);
+        }
+        if(vertex == 5) {
+            tiles[1] = getTile(row, col - 1);
+            tiles[2] = getTile(row - 1, col - 1 + offset);
+        }
+        return tiles;
+    }
+
+    private Tile getTile(int row, int col) {
+        if(row < 0 || row >= tiles.length || col < 0 || col >= tiles[0].length) {
+            return null;
+        }
+        return tiles[row][col];
+    }
+
+    private boolean hasNeighbor(Tile tile, int vertex) {
         if(tile == null) { return false; }
         if(vertex == 0) {
             if(tile.vertices[1].placedItem != null) { return true; }

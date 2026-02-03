@@ -3,18 +3,22 @@ package luis.josh.catan.host.game.actions;
 import org.json.simple.JSONObject;
 
 import luis.josh.catan.host.game.board.Board;
+import luis.josh.catan.host.game.board.resources.Resource;
 import luis.josh.catan.host.game.board.tile.Tile;
 import luis.josh.catan.host.game.gamepieces.Settlement;
 import luis.josh.catan.host.game.player.Player;
+import java.util.Map;
 
 // start, 1 for first settlement, 2 for second settlement, 0 for regular placement
 
 public class PlaceSettlement implements Action{
 
-    Board board;
+    private Board board;
+    private Map<Resource, Integer> resourceCost;
 
-    public PlaceSettlement(Board board) {
+    public PlaceSettlement(Board board, Map<Resource, Integer> resourceCost) {
         this.board = board;
+        this.resourceCost = resourceCost;
     }
 
     @Override
@@ -24,6 +28,7 @@ public class PlaceSettlement implements Action{
         int row = (int)(long)location.get("row");
         int col = (int)(long)location.get("col");
         int vertex = (int)(long)location.get("vertex");
+
         Tile tile = board.tiles[row][col];
         if(tile == null) {
             return null; //TODO
@@ -34,6 +39,17 @@ public class PlaceSettlement implements Action{
         if(start == 0) {
             if(!tile.vertices[vertex].isConnected(player)) {
                 return null; // TODO
+            }
+            if(!player.checkAndPurchase(resourceCost)) {
+                return null; // TODO
+            }
+        }
+        if(start == 2) {
+            Tile[] tiles = board.getNeighborTiles(row, col, vertex);
+            for(Tile rsrcTile : tiles) {
+                if(rsrcTile != null) {
+                    rsrcTile.addResource(player);
+                }
             }
         }
         tile.vertices[vertex].setPlacedItem(new Settlement(player));

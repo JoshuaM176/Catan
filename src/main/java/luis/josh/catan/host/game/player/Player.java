@@ -26,10 +26,32 @@ public class Player implements ResourceListener{
         }
     }
 
+    private boolean hasResources(Map<Resource, Integer> resources) {
+        for(Resource resource: resources.keySet()) {
+            if(this.resources.get(resource) == null) {
+                return false;
+            }
+            if(this.resources.get(resource) < resources.get(resource)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean checkAndPurchase(Map<Resource, Integer> resources) {
+        if(!hasResources(resources)) {
+            return false;
+        }
+        for(Resource resource: resources.keySet()) {
+            this.resources.put(resource, this.resources.get(resource) - resources.get(resource));
+        }
+        return true;
+    }
+
     public String toString() {
         String string = "";
         for(Resource resource: resources.keySet()) {
-            string += resource.name() + " :: " + resources.get(resource);
+            string += resource.name() + " :: " + resources.get(resource) + " ";
         }
         return string;
     }

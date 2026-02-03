@@ -3,10 +3,11 @@ package luis.josh.catan.host.game.board.tile;
 import luis.josh.catan.host.game.board.Edge;
 import luis.josh.catan.host.game.board.Vertex;
 import luis.josh.catan.host.game.board.resources.Resource;
+import luis.josh.catan.host.game.board.resources.ResourceListener;
 import luis.josh.catan.host.game.dice.DiceRollListener;
 import luis.josh.catan.host.game.gamepieces.Robber;
 
-public class Tile implements DiceRollListener{
+public abstract class Tile implements DiceRollListener{
     
     public Resource resource;
     public Vertex[] vertices = new Vertex[6]; // Top is 0
@@ -23,6 +24,10 @@ public class Tile implements DiceRollListener{
 
     @Override
     public void NumberRolled(int rolledNumber) {
+    }
+
+    public void addResource(ResourceListener resourceListener) {
+        resourceListener.addResource(resource);
     }
 
 }
