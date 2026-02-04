@@ -5,6 +5,7 @@ import luis.josh.catan.host.game.gamepieces.developmentcards.DevelopmentCard;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,10 @@ public class Player implements ResourceListener{
         }
     }
 
+    public void subtractResource(Resource resource) {
+        resources.put(resource, resources.get(resource)-1);
+    }
+
     private boolean hasResources(Map<Resource, Integer> resources) {
         for(Resource resource: resources.keySet()) {
             if(this.resources.get(resource) == null) {
@@ -36,6 +41,25 @@ public class Player implements ResourceListener{
             }
         }
         return true;
+    }
+
+    public Resource stealResource() {
+        Random random = new Random();
+        int totalResources = 0;
+        for(int count: resources.values()) {
+            totalResources += count;
+        }
+        if(totalResources > 0){
+            int randomInt = random.nextInt()%totalResources + 1;
+            for(Resource resource: resources.keySet()) {
+                randomInt -= resources.get(resource);
+                if(randomInt <= 0) {
+                    subtractResource(resource);
+                    return resource;
+                }
+            }
+        }
+        return null;
     }
 
     public boolean checkAndPurchase(Map<Resource, Integer> resources) {

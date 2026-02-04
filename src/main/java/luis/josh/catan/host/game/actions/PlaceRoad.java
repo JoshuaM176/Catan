@@ -23,7 +23,7 @@ public class PlaceRoad implements Action{
     }
 
     @Override
-    public JSONObject execute(JSONObject data, Player player) {
+    public JSONObject[] execute(JSONObject data, Player player) {
         int start = (int)(long)data.get("start");
         JSONObject location = (JSONObject)data.get("tile");
         int row = (int)(long)location.get("row");
@@ -32,43 +32,43 @@ public class PlaceRoad implements Action{
 
         Tile tile = board.tiles[row][col];
         if(tile == null) {
-            return null; // TODO
+            return new JSONObject[0]; // TODO
         }
         if(tile.edges[edge].placedItem != null) { return null; } // TODO
         if(start == 0) {
             if(edge == 5) {
                 if(!tile.vertices[5].isConnected(player) && !tile.vertices[0].isConnected(player)) {
-                    return null; // TODO
+                    return new JSONObject[0]; // TODO
                 }
             }
             else if(!tile.vertices[edge].isConnected(player) && !tile.vertices[edge+1].isConnected(player)) {
-                return null; // TODO
+                return new JSONObject[0]; // TODO
             }
             if(!player.checkAndPurchase(resourceCost)) {
-                return null; // TODO
+                return new JSONObject[0]; // TODO
             }
         }
         if(start == 1 || start == 2) {
             if(edge == 5) {
                 if(tile.vertices[5].isConnected() && tile.vertices[5].placedItem != null) {
-                    return null; // TODO
+                    return new JSONObject[0]; // TODO
                 }
                 if(tile.vertices[0].isConnected() && tile.vertices[0].placedItem != null) {
-                    return null; // TODO
+                    return new JSONObject[0]; // TODO
                 }
                 if(!tile.vertices[5].hasPlacedItem(player) && !tile.vertices[0].hasPlacedItem(player)) {
-                    return null; // TODO
+                    return new JSONObject[0]; // TODO
                 }
             }
             else {
                 if(tile.vertices[edge].isConnected() && tile.vertices[edge].placedItem != null) {
-                    return null; // TODO
+                    return new JSONObject[0]; // TODO
                 }
                 if(tile.vertices[edge+1].isConnected() && tile.vertices[edge+1].placedItem != null) {
-                    return null; // TODO
+                    return new JSONObject[0]; // TODO
                 }
                 if(!tile.vertices[edge].hasPlacedItem(player) && !tile.vertices[edge+1].hasPlacedItem(player)) {
-                    return null; // TODO
+                    return new JSONObject[0]; // TODO
                 }
             }
         }
@@ -81,7 +81,8 @@ public class PlaceRoad implements Action{
             tile.vertices[edge].addConnection(player);
             tile.vertices[edge+1].addConnection(player);
         }
-        data.put("event","placeRoad");
-        return data;
+        data.put("event","placedRoad");
+        data.put("players", "all");
+        return new JSONObject[]{data};
     }
 }

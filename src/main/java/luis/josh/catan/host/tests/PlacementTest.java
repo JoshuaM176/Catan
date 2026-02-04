@@ -1,5 +1,6 @@
 package luis.josh.catan.host.tests;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
@@ -35,7 +36,7 @@ public class PlacementTest {
             }
                 """
         );
-        System.out.println(placeSettlement.execute(data, player1));
+        System.out.println(Arrays.toString(placeSettlement.execute(data, player1)));
         data = (JSONObject)JSONValue.parse(
                 """
             {
@@ -48,7 +49,7 @@ public class PlacementTest {
             }
                 """
         );
-        System.out.println(placeRoad.execute(data, player1));
+        System.out.println(Arrays.toString(placeRoad.execute(data, player1)));
         data = (JSONObject)JSONValue.parse(
                 """
             {
@@ -61,7 +62,7 @@ public class PlacementTest {
             }
                 """
         );
-        System.out.println(placeSettlement.execute(data, player1));
+        System.out.println(Arrays.toString(placeSettlement.execute(data, player1)));
         data = (JSONObject)JSONValue.parse(
                 """
             {
@@ -74,7 +75,7 @@ public class PlacementTest {
             }
                 """
         );
-        System.out.println(placeRoad.execute(data, player1));
+        System.out.println(Arrays.toString(placeRoad.execute(data, player1)));
         data = (JSONObject)JSONValue.parse(
                 """
             {
@@ -88,9 +89,9 @@ public class PlacementTest {
                 """
         );
         System.out.println(player1);
-        System.out.println(placeRoad.execute(data, player1));
+        System.out.println(Arrays.toString(placeRoad.execute(data, player1)));
         for(int i = 0; i < 5; i++) {
-            System.out.println(rollDice.execute(null, player1));
+            System.out.println(Arrays.toString(rollDice.execute(null, player1)));
         }
         data = (JSONObject)JSONValue.parse(
                 """
@@ -104,7 +105,7 @@ public class PlacementTest {
             }
                 """
         );
-        System.out.println(placeSettlement.execute(data, player1));
+        System.out.println(Arrays.toString(placeSettlement.execute(data, player1)));
         System.out.println(player1);
         data = (JSONObject)JSONValue.parse(
                 """
@@ -117,7 +118,7 @@ public class PlacementTest {
             }
                 """
         );
-        System.out.println(placeCity.execute(data, player1));
+        System.out.println(Arrays.toString(placeCity.execute(data, player1)));
         System.out.println(player1);
         System.out.println(board);
         System.out.println(player1);

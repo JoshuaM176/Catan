@@ -23,7 +23,7 @@ public class PlaceCity implements Action{
     }
 
     @Override
-    public JSONObject execute(JSONObject data, Player player) {
+    public JSONObject[] execute(JSONObject data, Player player) {
         JSONObject location = (JSONObject)data.get("tile");
         int row = (int)(long)location.get("row");
         int col = (int)(long)location.get("col");
@@ -31,24 +31,25 @@ public class PlaceCity implements Action{
 
         Tile tile = board.tiles[row][col];
         if(tile == null) {
-            return null; //TODO
+            return new JSONObject[0]; //TODO
         }
         VertexPlaceable placedItem = tile.vertices[vertex].placedItem;
         if(placedItem == null) {
-            return null; // TODO
+            return new JSONObject[0]; // TODO
         }
         if(player != placedItem.getPlayer()) {
-            return null; // TODO
+            return new JSONObject[0]; // TODO
         }
         if(!(placedItem instanceof Settlement)) {
-            return null; // TODO
+            return new JSONObject[0]; // TODO
         }
         if(!player.checkAndPurchase(resourceCost)) {
-            return null; // TODO
+            return new JSONObject[0]; // TODO
         }
         tile.vertices[vertex].setPlacedItem(new City(player));
-        data.put("event","placeCity");
-        return data;
+        data.put("event","placedCity");
+        data.put("players", "all");
+        return new JSONObject[]{data};
     }
     
 }

@@ -22,7 +22,7 @@ public class PlaceSettlement implements Action{
     }
 
     @Override
-    public JSONObject execute(JSONObject data, Player player) {
+    public JSONObject[] execute(JSONObject data, Player player) {
         int start = (int)(long)data.get("start");
         JSONObject location = (JSONObject)data.get("tile");
         int row = (int)(long)location.get("row");
@@ -31,17 +31,17 @@ public class PlaceSettlement implements Action{
 
         Tile tile = board.tiles[row][col];
         if(tile == null) {
-            return null; //TODO
+            return new JSONObject[0]; //TODO
         }
         if(!board.isValidPlacement(row, col, vertex)) {
-            return null; //TODO
+            return new JSONObject[0]; //TODO
         }
         if(start == 0) {
             if(!tile.vertices[vertex].isConnected(player)) {
-                return null; // TODO
+                return new JSONObject[0]; // TODO
             }
             if(!player.checkAndPurchase(resourceCost)) {
-                return null; // TODO
+                return new JSONObject[0]; // TODO
             }
         }
         if(start == 2) {
@@ -53,7 +53,9 @@ public class PlaceSettlement implements Action{
             }
         }
         tile.vertices[vertex].setPlacedItem(new Settlement(player));
-        data.put("event", "placeSettlement");
-        return data;
+
+        data.put("event", "placedSettlement");
+        data.put("players", "all");
+        return new JSONObject[]{data};
     }
 }

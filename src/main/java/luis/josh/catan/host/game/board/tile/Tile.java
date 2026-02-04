@@ -6,6 +6,7 @@ import luis.josh.catan.host.game.board.resources.Resource;
 import luis.josh.catan.host.game.board.resources.ResourceListener;
 import luis.josh.catan.host.game.dice.DiceRollListener;
 import luis.josh.catan.host.game.gamepieces.Robber;
+import luis.josh.catan.host.game.player.Player;
 
 public abstract class Tile implements DiceRollListener{
     
@@ -18,8 +19,13 @@ public abstract class Tile implements DiceRollListener{
         this.resource = resource;
     }
 
-    public String toString() {
-        return resource.toString();
+    public boolean hasPlayer(Player player) {
+        for(Vertex vertex: vertices) {
+            if(vertex.hasPlacedItem(player)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -28,6 +34,10 @@ public abstract class Tile implements DiceRollListener{
 
     public void addResource(ResourceListener resourceListener) {
         resourceListener.addResource(resource);
+    }
+
+    public String toString() {
+        return resource.toString();
     }
 
 }

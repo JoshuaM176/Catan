@@ -8,6 +8,6 @@ import luis.josh.catan.host.game.player.Player;
 
 public interface Action {
      
-    public JSONObject execute(JSONObject data, Player player);
+    public JSONObject[] execute(JSONObject data, Player player);
 
 }
