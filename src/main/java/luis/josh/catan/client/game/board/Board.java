@@ -1,11 +1,16 @@
 package luis.josh.catan.client.game.board;
 
+import java.awt.Dimension;
+import java.util.function.Consumer;
+
 import javax.swing.JPanel;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import luis.josh.catan.client.game.board.tile.Tile;
+import luis.josh.catan.client.game.board.tile.Vertex;
+import luis.josh.catan.client.game.util.Coordinate;
 import luis.josh.catan.host.game.board.resources.Resource;
 
 public class Board {
@@ -13,13 +18,12 @@ public class Board {
     Tile[][] tiles;
     public JPanel jPanel;
     
-    public Board(JSONObject data) {
+    public Board(JSONObject data, Consumer<Tile> tileOnClick, Consumer<Vertex> vertexOnClick) {
         jPanel = new JPanel();
         jPanel.setLayout(null);
         JSONArray tileMatrix = (JSONArray)data.get("board");
         int nrows = tileMatrix.size();
         int ncols = ((JSONArray)tileMatrix.get(0)).size();
-        jPanel.setSize(150 * ncols + 125, 100 * nrows + 100);
         tiles = new Tile[nrows][ncols];
         for(int row = 0; row < nrows; row++) {
             JSONArray rowArray = (JSONArray)tileMatrix.get(row);
@@ -32,14 +36,34 @@ public class Board {
                     Tile tile = new Tile(
                         Resource.valueOf((String)tileData.get("resource")),
                         (int)(long)tileData.get("numberToken"),
-                        row,
-                        col
+                        new Coordinate(col, row),
+                        tileOnClick,
+                        vertexOnClick
                     );
                     tiles[row][col] = tile;
-                    jPanel.add(tile.jLabel);
-                    jPanel.add(tile.jButton);
+                    jPanel.add(tile.image);
+                    jPanel.add(tile.button);
                 }
             }
         }
+    }
+
+    public void redraw(int size) {
+        jPanel.setSize(getJPanelSize(size));
+        for(int row = 0; row < tiles.length; row++) {
+            for(int col = 0; col < tiles[0].length; col++) {
+                Tile tile = tiles[row][col];
+                if(tile != null) {
+                    tile.redraw(size);
+                }
+            }
+        }
+    }
+
+    private Dimension getJPanelSize(int size) {
+        return new Dimension(
+            (int)((size * 1.5) * tiles[0].length + (size * 1.25)),
+            (int)(size * (tiles.length + 1))
+        );
     }
 }

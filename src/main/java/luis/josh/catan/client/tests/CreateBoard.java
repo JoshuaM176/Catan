@@ -1,13 +1,15 @@
 package luis.josh.catan.client.tests;
 
-import javax.swing.ImageIcon;
+import java.util.function.Consumer;
+
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import luis.josh.catan.client.game.board.Board;
+import luis.josh.catan.client.game.board.tile.Tile;
+import luis.josh.catan.client.game.board.tile.Vertex;
 
 public class CreateBoard {
     public static void main(String[] args) {
@@ -49,9 +51,16 @@ public class CreateBoard {
 }               
             """ 
         );
-        Board board = new Board(data);
+				Consumer<Tile> tileOnClick = tile -> {
+					System.out.println(tile.resource);
+				};
+				Consumer<Vertex> vertexOnClick = vertex -> {
+					System.out.println("HELLO");
+				};
+        Board board = new Board(data, tileOnClick, vertexOnClick);
         board.jPanel.setLocation(200, 200);
         frame.add(board.jPanel);
         frame.setVisible(true);
+				board.redraw(100);
     } 
 }

@@ -12,8 +12,6 @@ public class Client {
         frame.setSize(1600, 900);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
-        Tile tile = new Tile(Resource.BRICK, 5, 1, 1);
-        frame.add(tile.jButton);
         frame.setVisible(true);
     }
 }
