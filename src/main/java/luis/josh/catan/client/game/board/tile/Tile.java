@@ -5,7 +5,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.function.Consumer;
@@ -41,25 +40,25 @@ public class Tile{
 
     private Rectangle getImageBounds(int size) {
         int offset = (pos.row % 2 == 0) ? 0 : 1;
-        int x = (int)(pos.col * (size * 1.5) + offset * (size * 0.75));
-        int y = (int)(pos.row * size);
-        int width = (int)(size * 1.5);
-        int height = (int)(size * 1.5);
+        int x = (int)(pos.col * size + offset * (size * 0.5));
+        int y = (int)(pos.row * size * 2 / 3);
+        int width = (int)(size);
+        int height = (int)(size);
         return new Rectangle(x, y, width, height);
     }
 
     private Rectangle getButtonBounds(int size) {
         int offset = (pos.row % 2 == 0) ? 0 : 1;
-        int x = (int)(pos.col * (size * 1.5) + offset * (size * 0.75) + (size * 0.35));
-        int y = (int)(pos.row * (size * 1) + (size * 0.35));
-        int width = (int)(size * 0.80);
-        int height = (int)(size * 0.80);
+        int x = (int)(pos.col * (size) + offset * (size * 0.5) + (size * 0.25));
+        int y = (int)(pos.row * (size * 2 / 3) + (size * 0.25));
+        int width = (int)(size * 0.50);
+        int height = (int)(size * 0.50);
         return new Rectangle(x, y, width, height);
     }
 
     public void redraw(int size) {
         imageIcon = new ImageIcon(
-            imageIcon.getImage().getScaledInstance((int)(size * 1.5), (int)(size * 1.5), Image.SCALE_SMOOTH)
+            imageIcon.getImage().getScaledInstance((int)(size), (int)(size), Image.SCALE_SMOOTH)
         );
         image.setIcon(imageIcon);
         Rectangle imageBounds = getImageBounds(size);

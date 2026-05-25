@@ -27,7 +27,7 @@ public class Vertex {
     }
 
     public void redraw(int size, Coordinate topLeft) {
-        Coordinate coordinate = getCoordinate((int)(size * 1.5));
+        Coordinate coordinate = getCoordinate((int)(size));
         coordinate = coordinate.add(topLeft);
         button.setBounds(getButtonBounds(coordinate, size));
     }
