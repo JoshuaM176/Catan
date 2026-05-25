@@ -21,11 +21,11 @@ public class MoveRobber implements Action {
     public JSONObject[] execute(JSONObject data, Player player) {
         JSONObject source = (JSONObject)data.get("sourceTile");
         JSONObject target = (JSONObject)data.get("targetTile");
-        int sourceRow = (int)(long)source.get("row");
-        int sourceColumn = (int)(long)source.get("col");
+        int sourceRow = (int)source.get("row");
+        int sourceColumn = (int)source.get("col");
         int targetRow = (int)(long)target.get("row");
-        int targetColumn = (int)(long)target.get("col");
-        Player targetPlayer = players[(int)(long)data.get("targetPlayer")];
+        int targetColumn = (int)target.get("col");
+        Player targetPlayer = players[(int)data.get("targetPlayer")];
 
         Tile sourceTile = board.tiles[sourceRow][sourceColumn];
         Tile targetTile = board.tiles[targetRow][targetColumn];
