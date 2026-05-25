@@ -1,5 +1,5 @@
 package luis.josh.catan.client.game.board.tile;
 
-public interface VertexPlaceable {
+public class EdgePlaceable {
   
 }

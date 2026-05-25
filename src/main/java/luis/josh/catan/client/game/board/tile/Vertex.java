@@ -20,6 +20,7 @@ public class Vertex {
 
     public Vertex(Coordinate tilePos, int pos, Consumer<Vertex> onClick, JPanel jPanel) {
         this.pos = pos;
+        this.tilePos = tilePos;
         button = new JButton("TEST");
         button.addActionListener(e -> onClick.accept(this));
         jPanel.add(button);
@@ -54,31 +55,29 @@ public class Vertex {
                 size
             );
         }
-        double sideLength = size / 2 / Math.sin(Math.toRadians(60));
-        int trim = (int)(size - sideLength / 2);
         switch(pos) {
             case 1: {
                 return new Coordinate(
                     size,
-                    trim
+                    size * 1 / 3
                 );
             }
             case 2: {
                 return new Coordinate(
                     size,
-                    size - trim
+                    size * 2 / 3
                 );
             }
             case 4: {
                 return new Coordinate(
                     0,
-                    size - trim
+                    size * 2 / 3
                 );
             }
             case 5: {
                 return new Coordinate(
                     0,
-                    trim
+                    size * 1 / 3
                 );
             }
         }

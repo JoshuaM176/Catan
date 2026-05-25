@@ -50,10 +50,10 @@ public class Tile{
 
     private Rectangle getButtonBounds(int size) {
         int offset = (pos.row % 2 == 0) ? 0 : 1;
-        int x = (int)(pos.col * (size * 1.5) + offset * (size * 0.75) + (size * 0.25));
-        int y = (int)(pos.row * (size * 1) + (size * 0.25));
-        int width = size;
-        int height = size;
+        int x = (int)(pos.col * (size * 1.5) + offset * (size * 0.75) + (size * 0.35));
+        int y = (int)(pos.row * (size * 1) + (size * 0.35));
+        int width = (int)(size * 0.80);
+        int height = (int)(size * 0.80);
         return new Rectangle(x, y, width, height);
     }
 

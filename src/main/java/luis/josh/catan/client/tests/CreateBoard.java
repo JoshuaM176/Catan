@@ -55,12 +55,14 @@ public class CreateBoard {
 					System.out.println(tile.resource);
 				};
 				Consumer<Vertex> vertexOnClick = vertex -> {
-					System.out.println("HELLO");
+					System.out.println("Vertex pos: " + vertex.pos);
+					System.out.println("Tile x: " + vertex.tilePos.x);
+					System.out.println("Tile y: " + vertex.tilePos.y);
 				};
         Board board = new Board(data, tileOnClick, vertexOnClick);
         board.jPanel.setLocation(200, 200);
         frame.add(board.jPanel);
         frame.setVisible(true);
-				board.redraw(150);
+				board.redraw(200);
     } 
 }
