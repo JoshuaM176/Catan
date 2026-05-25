@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.json.simple.JSONObject;
 
 import luis.josh.catan.host.game.board.Board;
+import luis.josh.catan.host.game.board.resources.Resource;
 import luis.josh.catan.host.game.player.Player;
 import luis.josh.catan.host.HostLogger;
 import luis.josh.catan.host.game.actionmanager.ActionManager;
@@ -33,7 +34,11 @@ public abstract class Game {
 
     public abstract Board generateBoard();
 
-    public abstract Map<String, Action> generateActions(Board board, Player[] players);
+    public Map<String, Action> generateActions(Board board, Player[] players) {
+        HashMap<String, Action> actionMap = new HashMap<>();
+        actionMap.put("placeSettlement", new PlaceSettlement(board, Map.of(Resource.BRICK, 1)));
+        return actionMap;
+    };
 
     public void acceptData(JSONObject data) {
         logger.info("Host recieved incoming message: {}", data);

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import luis.josh.catan.host.game.actions.messages.EventResponses;
 import luis.josh.catan.host.game.board.resources.Resource;
@@ -23,7 +24,10 @@ public class Discard implements Action{
             discardedResources.put(resource, count);
         }
         if(!player.checkAndPurchase(discardedResources)) {
-            return new JSONObject[0]; // TODO
+            JSONObject message = (JSONObject)JSONValue.parse("""
+                    {"message": "Failed to discard, not enough resources."}
+                    """);
+            return new JSONObject[]{EventResponses.purchaseFailed(message)};
         }
         return new JSONObject[]{EventResponses.discardHalf()};
     }

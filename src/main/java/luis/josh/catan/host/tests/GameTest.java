@@ -1,7 +1,5 @@
 package luis.josh.catan.host.tests;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 
 import org.json.simple.JSONObject;
@@ -11,9 +9,6 @@ import org.slf4j.Logger;
 import luis.josh.catan.host.HostLogger;
 import luis.josh.catan.host.game.Game;
 import luis.josh.catan.host.game.board.Board;
-import luis.josh.catan.host.game.board.resources.Resource;
-import luis.josh.catan.host.game.player.Player;
-import luis.josh.catan.host.game.actions.*;
 
 public class GameTest {
 
@@ -30,13 +25,7 @@ public class GameTest {
             public Board generateBoard() {
                 return GenerateTestBoard.generateTestBoard();
             }
-
-            @Override
-            public HashMap<String, Action> generateActions(Board board, Player[] players) {
-                HashMap<String, Action> actionMap = new HashMap<>();
-                actionMap.put("placeSettlement", new PlaceSettlement(board, Map.of(Resource.BRICK, 1)));
-                return actionMap;
-            }};
+        };
 
         JSONObject data = (JSONObject)JSONValue.parse(
                 """
