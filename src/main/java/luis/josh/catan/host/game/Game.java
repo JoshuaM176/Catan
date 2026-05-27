@@ -9,6 +9,12 @@ import org.json.simple.JSONObject;
 
 import luis.josh.catan.host.game.board.Board;
 import luis.josh.catan.host.game.board.resources.Resource;
+import luis.josh.catan.host.game.board.tile.harborassigner.DefaultHarborAssigner;
+import luis.josh.catan.host.game.board.tile.harborassigner.HarborAssigner;
+import luis.josh.catan.host.game.board.tile.numbertokenassigner.DefaultNumberTokenAssigner;
+import luis.josh.catan.host.game.board.tile.numbertokenassigner.NumberTokenAssigner;
+import luis.josh.catan.host.game.board.tile.tilecreator.DefaultTileCreator;
+import luis.josh.catan.host.game.board.tile.tilecreator.TileCreator;
 import luis.josh.catan.host.game.player.Player;
 import luis.josh.catan.host.HostLogger;
 import luis.josh.catan.host.game.actionmanager.ActionManager;
@@ -23,8 +29,11 @@ public abstract class Game {
     private static final Logger logger = HostLogger.getLogger(Game.class);
 
     public Game(Consumer<JSONObject> messageQueue, int players) {
+        logger.info("Initializing game...");
         this.messageQueue = messageQueue;
+        logger.info("Generating board...");
         this.board = generateBoard();
+        logger.info("\n{}", board.toString());
         this.players = new Player[players];
         this.actionManager = new ActionManager(this.players, generateActions(this.board, this.players));
         for(int i = 0; i < players; i++) {
@@ -32,13 +41,59 @@ public abstract class Game {
         }
     }
 
-    public abstract Board generateBoard();
+    private Board generateBoard() {
+        return new Board(
+            getTilePattern(),
+            getNumberTokenAssigner(),
+            getTileCreator(),
+            getHarborAssigner()
+        );
+    };
+
+    public int[][] getTilePattern() {
+        return new int[][] {
+            {0,1,1,1,0},
+            {1,1,1,1,0},
+            {1,1,1,1,1},
+            {1,1,1,1,0},
+            {0,1,1,1,0}
+        };
+    }
+
+    public NumberTokenAssigner getNumberTokenAssigner() {
+        int[] numberTokens = new int[] {5,2,6,3,8,10,9,12,11,4,8,10,9,4,5,6,3,11};
+        return new DefaultNumberTokenAssigner(numberTokens);
+    }
+
+    public TileCreator getTileCreator() {
+        return new DefaultTileCreator(Map.of(
+            Resource.STONE, 3,
+            Resource.BRICK, 3,
+            Resource.WHEAT, 4,
+            Resource.LOG, 4,
+            Resource.SHEEP, 4,
+            Resource.DESERT, 1
+        ));
+    }
+
+    public HarborAssigner getHarborAssigner() {
+        return new DefaultHarborAssigner(9,
+            Map.of(
+                Resource.STONE, 1,
+                Resource.BRICK, 1,
+                Resource.WHEAT, 1,
+                Resource.LOG, 1,
+                Resource.SHEEP, 1,
+                Resource.ANY, 4
+            )
+        );
+    }
 
     public Map<String, Action> generateActions(Board board, Player[] players) {
         return generateDefaultActions(board, players);
     };
 
-    public Map<String, Action> generateDefaultActions(Board board, Player[] players) {
+    public static Map<String, Action> generateDefaultActions(Board board, Player[] players) {
         HashMap<String, Action> actionMap = new HashMap<>();
         actionMap.put("discard", new Discard());
         actionMap.put("moveRobber", new MoveRobber(board, players));
@@ -56,6 +111,7 @@ public abstract class Game {
             Resource.SHEEP, 1,
             Resource.WHEAT, 1
         )));
+        actionMap.put("rollDice", new RollDice(board));
         return actionMap;
     }
 

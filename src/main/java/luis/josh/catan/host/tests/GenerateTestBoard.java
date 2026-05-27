@@ -21,7 +21,7 @@ public class GenerateTestBoard {
             {0,1,1,1,0}
         };
         int[] numberTokens = new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18};
-        NumberTokenAssigner numberTokenAssigner = new DefaultNumberTokenAssigner();
+        NumberTokenAssigner numberTokenAssigner = new DefaultNumberTokenAssigner(numberTokens);
         TileCreator tileCreator = new DefaultTileCreator(Map.of(
             Resource.STONE, 3,
             Resource.BRICK, 3,
@@ -40,7 +40,7 @@ public class GenerateTestBoard {
                 Resource.ANY, 4
             )
         );
-        Board board = new Board(tilePattern, numberTokens, numberTokenAssigner, tileCreator, harborAssigner);
+        Board board = new Board(tilePattern, numberTokenAssigner, tileCreator, harborAssigner);
         return board;
     }
 }

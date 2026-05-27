@@ -11,6 +11,10 @@ public class DefaultNumberTokenAssigner implements NumberTokenAssigner{
     int[] numberTokens;
     int tokenIndex = 0;
 
+    public DefaultNumberTokenAssigner(int[] numberTokens) {
+        this.numberTokens = numberTokens;
+    }
+
     private void assignNumberToken(int y, int x) {
         Tile tile = tiles[y][x];
         if(tile.resource != Resource.DESERT) {
@@ -25,10 +29,9 @@ public class DefaultNumberTokenAssigner implements NumberTokenAssigner{
     }
 
     @Override
-    public void assignNumberTokens(Tile[][] tiles, int[][] tilePattern, int[] numberTokens) {
+    public void assignNumberTokens(Tile[][] tiles, int[][] tilePattern) {
         this.tiles = tiles;
         this.tilePattern = tilePattern;
-        this.numberTokens = numberTokens;
         tokenIndex = 0;
         for(int step = 0; step < tilePattern.length / 2 + 1; step++) {
             for(int x = step; x < tilePattern[0].length - step; x++) {

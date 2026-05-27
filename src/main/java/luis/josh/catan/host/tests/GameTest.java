@@ -4,12 +4,10 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 
 import luis.josh.catan.host.HostLogger;
 import luis.josh.catan.host.game.Game;
-import luis.josh.catan.host.game.board.Board;
 
 public class GameTest {
 
@@ -22,21 +20,18 @@ public class GameTest {
         };
         Game testGame = new Game(messageQueue, 2) {
 
-            @Override
-            public Board generateBoard() {
-                return GenerateTestBoard.generateTestBoard();
-            }
         };
 
+        // Player 1 place first settlement
         JSONObject action = new JSONObject(
             Map.of(
                 "action", "placeSettlement",
                 "player", 1,
                 "data", new JSONObject(Map.of(
                     "tile", new JSONObject(Map.of(
-                        "row", 1,
-                        "col", 1,
-                        "vertex", 1
+                        "row", 3,
+                        "col", 3,
+                        "vertex",4
                     )),
                     "start", 1
                 ))
@@ -45,6 +40,7 @@ public class GameTest {
 
         testGame.acceptData(action);
         
+        // Player 1 place first road
         action = new JSONObject(
             Map.of(
                 "action", "placeRoad",
@@ -62,6 +58,7 @@ public class GameTest {
 
         testGame.acceptData(action);
 
+        // Player 1 place second settlement
         action = new JSONObject(
             Map.of(
                 "action", "placeSettlement",
@@ -79,6 +76,7 @@ public class GameTest {
         
         testGame.acceptData(action);
         
+        // Player 1 place second road
         action = new JSONObject(
             Map.of(
                 "action", "placeRoad",
@@ -91,6 +89,34 @@ public class GameTest {
                     )),
                     "start", 2
                 ))
+            )
+        );
+
+        testGame.acceptData(action);
+        
+        // Player 1 try placing another road
+        action = new JSONObject(
+            Map.of(
+                "action", "placeRoad",
+                "player", 1,
+                "data", new JSONObject(Map.of(
+                    "tile", new JSONObject(Map.of(
+                        "row", 1,
+                        "col", 1,
+                        "edge", 3
+                    )),
+                    "start", 0
+                ))
+            )
+        );
+        
+        testGame.acceptData(action);
+
+        // Player 1 rolls the dice
+        action = new JSONObject(
+            Map.of(
+                "action", "rollDice",
+                "player", 1
             )
         );
 

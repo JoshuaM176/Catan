@@ -13,9 +13,9 @@ public class Board {
     public Tile[][] tiles;
     private Dice dice = new Dice();
 
-    public Board(int[][] tilePattern, int[] numberTokens, NumberTokenAssigner numberTokenAssigner, TileCreator tileCreator, HarborAssigner harborAssigner) {
+    public Board(int[][] tilePattern, NumberTokenAssigner numberTokenAssigner, TileCreator tileCreator, HarborAssigner harborAssigner) {
         tiles = tileCreator.createTiles(tilePattern, dice);
-        numberTokenAssigner.assignNumberTokens(tiles, tilePattern, numberTokens);
+        numberTokenAssigner.assignNumberTokens(tiles, tilePattern);
         harborAssigner.assignHarbors(tiles);
     }
 
