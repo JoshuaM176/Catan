@@ -31,6 +31,23 @@ public class EventResponses {
         return eventResponse("discardedHalf", "self", new JSONObject());
     }
 
+    // Trigger Events
+    public static JSONObject moveRobberTrigger() {
+        return eventResponse(
+            "moveRobber",
+            "self",
+            new JSONObject()
+        );
+    }
+
+    public static JSONObject discardHalfTrigger() {
+        return eventResponse(
+            "discardHalf",
+            "all",
+            new JSONObject()
+        );
+    }
+
     // Error Messages
     public static JSONObject purchaseFailed(JSONObject data) {
         return eventResponse("purchaseFailed", "self", data);

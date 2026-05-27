@@ -42,12 +42,15 @@ public class MoveRobber implements Action {
         if(targetTile.robber != null) {
             return new JSONObject[]{EventResponses.moveRobberFailed()};
         }
-        if(!targetTile.hasPlayer(targetPlayer)) {
+        if(!targetTile.hasPlayer(targetPlayer) && targetPlayer != null) {
             return new JSONObject[]{EventResponses.moveRobberFailed()};
         }
         targetTile.robber = sourceTile.robber;
         sourceTile.robber = null;
-        Resource stolenResource = targetPlayer.stealResource();
+        Resource stolenResource = null;
+        if(targetPlayer != null) {
+            stolenResource = targetPlayer.stealResource();
+        }
         if(stolenResource != null) {
             player.addResource(stolenResource);
         }
