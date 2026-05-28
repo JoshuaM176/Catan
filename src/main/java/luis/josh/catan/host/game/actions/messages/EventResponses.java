@@ -4,9 +4,11 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import luis.josh.catan.util.JSONUtil;
+
 public class EventResponses {
 
-    public static JSONObject eventResponse(String event, String players, JSONObject data) {
+    public static JSONObject eventResponse(String event, Object players, JSONObject data) {
         JSONObject rtn = new JSONObject(
             Map.of(
                 "event", event,
@@ -87,5 +89,32 @@ public class EventResponses {
             )
         );
         return eventResponse("placeRoadFailed", "self", data);
+    }
+
+    public static JSONObject waitForTurn(int player) {
+        JSONObject data = new JSONObject(
+            Map.of(
+                "message", "Please wait for your turn."
+            )
+        );
+        return eventResponse("waitForTurn", JSONUtil.ArrayToJSON(new Integer[]{player}), data);
+    }
+
+    public static JSONObject unavailableAction() {
+        JSONObject data = new JSONObject(
+            Map.of(
+                "message", "Action unavailable."
+            )
+        );
+        return eventResponse("actionUnavailable", "self", data);
+    }
+
+    public static JSONObject unavailableAction(int playerNum) {
+        JSONObject data = new JSONObject(
+            Map.of(
+                "message", "Action unavailable."
+            )
+        );
+        return eventResponse("actionUnavailable", JSONUtil.ArrayToJSON(new Integer[]{playerNum}), data);
     }
 }

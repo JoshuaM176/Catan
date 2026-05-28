@@ -24,7 +24,7 @@ public class MoveRobberEvent implements Event{
     }
 
     public void initialize(Board board, Player[] players, Consumer<JSONObject> messageQueue) {
-        actionManager = new ActionManager(players, Map.of("moveRobber", new MoveRobber(board, players)));
+        actionManager = new ActionManager(players, Map.of("moveRobber", new MoveRobber(board, players))).setWaitForTurn(() -> turn);
         messageQueue.accept(ActionResponses.actionResponse(
             "moveRobber",
             JSONUtil.ArrayToJSON(new Integer[]{turn}),

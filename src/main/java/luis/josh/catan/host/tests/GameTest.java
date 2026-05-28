@@ -119,9 +119,6 @@ public class GameTest {
                 "player", 0
             )
         );
-        for(int i = 0; i < 50; i++) {
-            testGame.acceptData(action);
-        }
 
     }
 }

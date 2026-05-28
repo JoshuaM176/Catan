@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import org.json.simple.JSONObject;
 
 import luis.josh.catan.host.game.actionmanager.ActionManager;
+import luis.josh.catan.host.game.actions.Action;
 import luis.josh.catan.host.game.actions.Discard;
 import luis.josh.catan.host.game.board.Board;
 import luis.josh.catan.host.game.events.messages.ActionResponses;
@@ -27,7 +28,7 @@ public class DiscardEvent implements Event {
 
     @Override
     public void initialize(Board board, Player[] players, Consumer<JSONObject> messageQueue) {
-        actionManager = new ActionManager(players, Map.of("discard", new Discard()));
+        actionManager = new ActionManager(players, new Action[]{new Discard()});
         finished = new boolean[players.length];
         for(int i = 0; i < players.length; i++) {
             Player player = players[i];

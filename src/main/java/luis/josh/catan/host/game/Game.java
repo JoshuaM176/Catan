@@ -45,10 +45,10 @@ public abstract class Game {
         this.board = generateBoard();
         logger.info("\n{}", board.toString());
         this.players = new Player[players];
-        this.actionManager = new ActionManager(this.players, generateActions(this.board, this.players));
         for(int i = 0; i < players; i++) {
             this.players[i] = new Player(e -> processEvent(e), i);
         }
+        this.actionManager = generateActions(board, this.players);
         this.eventManager = new EventManager(board, this.players, this.messageQueue, generateEvents());
     }
 
@@ -100,28 +100,32 @@ public abstract class Game {
         );
     }
 
-    public Map<String, Action> generateActions(Board board, Player[] players) {
-        return generateDefaultActions(board, players);
+    public ActionManager generateActions(Board board, Player[] players) {
+        ActionManager actionManager = new ActionManager(players, Map.of());
+        for(Action action: generateDefaultActions(board, players)){
+            actionManager.addAction(action);
+        }
+        return actionManager;
     };
 
-    public static Map<String, Action> generateDefaultActions(Board board, Player[] players) {
-        HashMap<String, Action> actionMap = new HashMap<>();
-        actionMap.put("placeCity", new PlaceCity(board, Map.of(
-            Resource.WHEAT, 2,
-            Resource.STONE, 3
-        )));
-        actionMap.put("placeRoad", new PlaceRoad(board, Map.of(
-            Resource.BRICK, 1,
-            Resource.LOG, 1
-        )));
-        actionMap.put("placeSettlement", new PlaceSettlement(board, Map.of(
-            Resource.BRICK, 1,
-            Resource.LOG, 1,
-            Resource.SHEEP, 1,
-            Resource.WHEAT, 1
-        )));
-        actionMap.put("rollDice", new RollDice(board));
-        return actionMap;
+    public static Action[] generateDefaultActions(Board board, Player[] players) {
+        return new Action[]{
+            new PlaceCity(board, Map.of(
+                Resource.WHEAT, 2,
+                Resource.STONE, 3
+            )),
+            new PlaceRoad(board, Map.of(
+                Resource.BRICK, 1,
+                Resource.LOG, 1
+            )),
+            new PlaceSettlement(board, Map.of(
+                Resource.BRICK, 1,
+                Resource.LOG, 1,
+                Resource.SHEEP, 1,
+                Resource.WHEAT, 1
+            )),
+            new RollDice(board)
+        };
     }
 
     public Map<String, Function<JSONObject, Event>> generateEvents() {
@@ -147,23 +151,10 @@ public abstract class Game {
             }
             return;
         }
-        if(data.containsKey("action")) {
-            executeAction(data);
-        }
+        executeAction(data);
     }
 
     private void executeAction(JSONObject data) {
-        int player = (int)data.get("player");
-        if(player != turn) {
-            messageQueue.accept(
-                new JSONObject(Map.of(
-                    "event", "waitForTurn",
-                    "players", JSONUtil.ArrayToJSON(new Integer[]{player}),
-                    "data", new JSONObject(Map.of("message", "Please wait for your turn."))
-                ))
-            );
-            return;
-        }
         JSONObject[] results = actionManager.executeAction(data);
         processEvents(results);
     }
