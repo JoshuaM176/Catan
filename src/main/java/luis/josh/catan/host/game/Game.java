@@ -1,7 +1,9 @@
 package luis.josh.catan.host.game;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -19,6 +21,7 @@ import luis.josh.catan.host.game.board.tile.tilecreator.DefaultTileCreator;
 import luis.josh.catan.host.game.board.tile.tilecreator.TileCreator;
 import luis.josh.catan.host.game.eventmanager.EventManager;
 import luis.josh.catan.host.game.events.Event;
+import luis.josh.catan.host.game.events.MoveRobberEvent;
 import luis.josh.catan.host.game.player.Player;
 import luis.josh.catan.host.HostLogger;
 import luis.josh.catan.host.game.actionmanager.ActionManager;
@@ -34,6 +37,7 @@ public abstract class Game {
     private Player[] players;
     private int turn;
     private Event currentEvent = null;
+    private Queue<Event> eventQueue = new LinkedList<>();
     private static final Logger logger = HostLogger.getLogger(Game.class);
 
     public Game(Consumer<JSONObject> messageQueue, int players) {
@@ -48,6 +52,7 @@ public abstract class Game {
             this.players[i] = new Player(e -> processEvent(e), i);
         }
         this.eventManager = new EventManager(board, this.players, generateEvents());
+        turn = 0;
     }
 
     private Board generateBoard() {
@@ -127,15 +132,21 @@ public abstract class Game {
     }
 
     public Map<String, Function<JSONObject, Event>> generateDefaultEvents() {
-        return Map.of();
+        return Map.of(
+            "moveRobber", data -> new MoveRobberEvent()
+        );
     }
 
     public void acceptData(JSONObject data) {
         logger.info("Host recieved incoming message: {}", data);
         if(currentEvent != null) {
-            if(currentEvent.acceptData(data)) {
-                currentEvent = null;
-            };
+            processEvents(currentEvent.acceptData(data));
+            if(currentEvent.isFinished()){
+                messageQueue.accept(new JSONObject(
+                    Map.of("event", "specialEventFinished")
+                ));
+                moveEventQueue();
+            }
             return;
         }
         if(data.containsKey("action")) {
@@ -145,7 +156,11 @@ public abstract class Game {
 
     private void executeAction(JSONObject data) {
         JSONObject[] results = actionManager.executeAction(data);
-        for(JSONObject jsonObject: results) {
+        processEvents(results);
+    }
+
+    private void processEvents(JSONObject[] data) {
+        for(JSONObject jsonObject: data) {
             processEvent(jsonObject);
         }
     }
@@ -155,9 +170,28 @@ public abstract class Game {
         data.put("turn", turn);
         Event event = eventManager.processEvent(data);
         if(event != null) {
-            currentEvent = event;
+            eventQueue.add(event);
+            if(currentEvent == null) {
+                moveEventQueue();
+            }
+            return;
         }
         messageQueue.accept(data);
+    }
+
+    private void moveEventQueue() {
+        if(eventQueue.size() > 0) {
+            currentEvent = eventQueue.remove();
+            messageQueue.accept(new JSONObject(Map.of(
+                "event", "specialEventStarted",
+                "data", new JSONObject(Map.of(
+                    "name", currentEvent.getName()
+                ))
+            )));
+        }
+        else{
+            currentEvent = null;
+        }
     }
 
     private void nextTurn() {

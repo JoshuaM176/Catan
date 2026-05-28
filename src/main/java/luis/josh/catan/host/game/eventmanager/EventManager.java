@@ -4,7 +4,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
 
+import luis.josh.catan.host.HostLogger;
 import luis.josh.catan.host.game.board.Board;
 import luis.josh.catan.host.game.events.Event;
 import luis.josh.catan.host.game.player.Player;
@@ -14,6 +16,7 @@ public class EventManager {
     private Board board;
     private Player[] players;
     private Map<String, Function<JSONObject, Event>> eventMap;
+    private static Logger logger = HostLogger.getLogger(EventManager.class);
 
     public EventManager(Board board, Player[] players, Map<String, Function<JSONObject, Event>> eventMap) {
         this.board = board;
@@ -29,6 +32,7 @@ public class EventManager {
         }
         Event event = eventFunction.apply(data);
         event.initialize(board, players);
+        logger.info("Starting event: {}. Data: {}", eventName, data);
         return event;
     }
 }
