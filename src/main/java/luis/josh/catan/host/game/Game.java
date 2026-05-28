@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
-
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import luis.josh.catan.host.game.board.Board;
@@ -52,7 +52,7 @@ public abstract class Game {
             this.players[i] = new Player(e -> processEvent(e), i);
         }
         this.eventManager = new EventManager(board, this.players, generateEvents());
-        turn = 0;
+        turn = 1;
     }
 
     private Board generateBoard() {
@@ -154,7 +154,21 @@ public abstract class Game {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void executeAction(JSONObject data) {
+        int player = (int)data.get("player");
+        JSONArray playerArray = new JSONArray();
+        playerArray.add(player);
+        if(player != turn) {
+            messageQueue.accept(
+                new JSONObject(Map.of(
+                    "event", "waitForTurn",
+                    "players", playerArray,
+                    "data", new JSONObject(Map.of("message", "Please wait for your turn."))
+                ))
+            );
+            return;
+        }
         JSONObject[] results = actionManager.executeAction(data);
         processEvents(results);
     }
