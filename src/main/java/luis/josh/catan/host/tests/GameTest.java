@@ -76,7 +76,7 @@ public class GameTest {
         
         testGame.acceptData(action);
         
-        // Player 1 place second road
+        // Player 1 place first road
         action = new JSONObject(
             Map.of(
                 "action", "placeRoad",
@@ -94,6 +94,7 @@ public class GameTest {
 
         testGame.acceptData(action);
         
+        // Player 1 place second settlement
         action = new JSONObject(
             Map.of(
                 "action", "placeSettlement",
@@ -111,13 +112,78 @@ public class GameTest {
 
         testGame.acceptData(action);
 
-        // Player 1 rolls the dice
+        // Player 1 place second road
         action = new JSONObject(
             Map.of(
-                "action", "rollDice",
-                "player", 0
+                "action", "placeRoad",
+                "player", 1,
+                "data", new JSONObject(Map.of(
+                    "tile", new JSONObject(Map.of(
+                        "row", 2,
+                        "col", 1,
+                        "edge",3
+                    )),
+                    "start", 2
+                ))
             )
         );
 
+        testGame.acceptData(action);
+
+        // Player 0 place first settlement
+        action = new JSONObject(
+            Map.of(
+                "action", "placeSettlement",
+                "player", 0,
+                "data", new JSONObject(Map.of(
+                    "tile", new JSONObject(Map.of(
+                        "row", 2,
+                        "col", 2,
+                        "vertex",1
+                    )),
+                    "start", 2
+                ))
+            )
+        );
+
+        testGame.acceptData(action);
+        
+        // Player 0 place first road
+        action = new JSONObject(
+            Map.of(
+                "action", "placeRoad",
+                "player",0,
+                "data", new JSONObject(Map.of(
+                    "tile", new JSONObject(Map.of(
+                        "row", 2,
+                        "col", 2,
+                        "edge",0
+                    )),
+                    "start", 2
+                ))
+            )
+        );
+
+        testGame.acceptData(action);
+
+        action = new JSONObject(Map.of(
+            "action", "rollDice",
+            "player", 0,
+            "data", new JSONObject()
+        ));
+        for(int i = 0; i < 4; i++) {
+            testGame.acceptData(action);
+        }
+
+        action = new JSONObject(Map.of(
+            "action", "purchaseDevelopmentCard",
+            "player", 0,
+            "data", new JSONObject()
+        ));
+
+        testGame.acceptData(action);
+
+
+        System.out.println(testGame);
     }
 }

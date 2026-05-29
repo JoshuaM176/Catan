@@ -3,11 +3,10 @@ package luis.josh.catan.host.game.player;
 import luis.josh.catan.host.game.board.resources.ResourceListener;
 import luis.josh.catan.host.game.gamepieces.cards.CardDeck;
 import luis.josh.catan.host.game.gamepieces.cards.ResourceCard;
-import luis.josh.catan.host.game.gamepieces.developmentcards.DevelopmentCard;
+import luis.josh.catan.host.game.gamepieces.cards.developmentcards.DevelopmentCard;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Consumer;
 
 import org.json.simple.JSONObject;
@@ -21,11 +20,12 @@ import luis.josh.catan.host.game.board.resources.Resource;
 
 public class Player implements ResourceListener{
     CardDeck<ResourceCard> resources = new CardDeck<>();
-    List<DevelopmentCard> developmentCards = new ArrayList<DevelopmentCard>();
+    CardDeck<DevelopmentCard> devCards = new CardDeck<>();
     public List<Harbor> harbors = new ArrayList<Harbor>();
     private int victoryPoints = 0;
     private Consumer<JSONObject> messageQueue;
     private int playerNum;
+    private int knightsPlayed = 0;
 
     /**
      * Constructor with no messageQueue or playerNum for testing purposes.
@@ -71,6 +71,26 @@ public class Player implements ResourceListener{
     }
 
     /**
+     * Add a development card to this player's hand.
+     * @param card The type of card to add.
+     */
+    public void addDevCard(DevelopmentCard card) {
+        devCards.addCard(card);
+        messageQueue.accept(
+            EventResponses.eventResponse(
+                "gainedDevCard",
+                "all",
+                new JSONObject(
+                    Map.of(
+                        "card", card.getName(),
+                        "player", playerNum
+                    )
+                )
+            )
+        );
+    }
+
+    /**
      * Spends a single resource and sends corresponding message.
      * @param resource The resource type to spend.
      */
@@ -106,6 +126,26 @@ public class Player implements ResourceListener{
                     Map.of(
                         "resource", resource.name(),
                         "amount", amount,
+                        "player", playerNum
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * Spends a single dev card and sends corresponding message.
+     * @param resource The card type to use.
+     */
+    public void useDevCard(DevelopmentCard card) {
+        devCards.subtractCard(card);
+        messageQueue.accept(
+            EventResponses.eventResponse(
+                "usedDevCard",
+                "all",
+                new JSONObject(
+                    Map.of(
+                        "card", card.getName(),
                         "player", playerNum
                     )
                 )
@@ -185,8 +225,25 @@ public class Player implements ResourceListener{
         );
     }
 
+    public void addKnight() {
+        knightsPlayed++;
+    }
+
     @Override
     public String toString() {
-        return resources.toString();
+        return String.format(
+            """
+            Dev Cards: %s
+            Resources: %s
+            Harbors: %s
+            Victory Points: %d
+            Knights: %d
+            """,
+            devCards.toString(),
+            resources.toString(),
+            harbors.toString(),
+            victoryPoints,
+            knightsPlayed
+        );
     }
 }

@@ -6,14 +6,22 @@
 
 ## Events
 
-  - addResource
+  - gainedResource
     - resource
     - amount
     - player
 
-  - subtractResource
+  - spentResource
     - resource
     - amount
+    - player
+
+  - gainedDevCard
+    - card
+    - player
+
+  - usedDevCard
+    - card
     - player
 
 ## Special Events

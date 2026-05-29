@@ -20,6 +20,9 @@ import luis.josh.catan.host.game.events.DiscardEvent;
 import luis.josh.catan.host.game.events.Event;
 import luis.josh.catan.host.game.events.MoveRobberEvent;
 import luis.josh.catan.host.game.events.SetupEvent;
+import luis.josh.catan.host.game.gamepieces.cards.CardDeck;
+import luis.josh.catan.host.game.gamepieces.cards.developmentcards.DevelopmentCard;
+import luis.josh.catan.host.game.gamepieces.cards.developmentcards.Knight;
 import luis.josh.catan.host.game.player.Player;
 import luis.josh.catan.host.HostLogger;
 import luis.josh.catan.host.game.actionmanager.ActionManager;
@@ -112,11 +115,11 @@ public abstract class Game {
         return actionManager;
     };
 
-    protected static Action[] generateDefaultActions(Board board, Player[] players) {
+    protected Action[] generateDefaultActions(Board board, Player[] players) {
         return new Action[]{
             new PlaceCity(board, Map.of(
-                Resource.WHEAT, 2,
-                Resource.STONE, 3
+                Resource.STONE, 3,
+                Resource.WHEAT, 2
             )),
             new PlaceRoad(board, Map.of(
                 Resource.BRICK, 1,
@@ -128,8 +131,23 @@ public abstract class Game {
                 Resource.SHEEP, 1,
                 Resource.WHEAT, 1
             )),
-            new RollDice(board)
+            new RollDice(board),
+            new PurchaseDevelopmentCard(
+                generateDefaultDevCards(),
+                Map.of(
+                    Resource.SHEEP, 1,
+                    Resource.STONE, 1,
+                    Resource.WHEAT, 1
+                )
+            )
         };
+    }
+
+    protected CardDeck<DevelopmentCard> generateDefaultDevCards() {
+        CardDeck<DevelopmentCard> cardDeck = new CardDeck<>(Map.of(
+            new Knight(), 14
+        ));
+        return cardDeck;
     }
 
     protected Map<String, Function<JSONObject, Event>> generateEvents() {
@@ -200,5 +218,17 @@ public abstract class Game {
                 "player", turn
             ))
         ));
+    }
+
+    @Override
+    public String toString() {
+        String string = "";
+        System.out.println("Board: " + board.toString());
+        System.out.println("Players:");
+        for(int i = 0; i < players.length; i++) {
+            System.out.println("Player " + i + ":");
+            System.out.println(players[i]);
+        }
+        return string;
     }
 }

@@ -5,7 +5,23 @@ import java.util.Map;
 import java.util.Random;
 
 public class CardDeck<C extends Card> {
-    Map<C, Integer> cards = new HashMap<>();
+
+    Map<C, Integer> cards;
+
+    /**
+     * Initializes an empty card deck.
+     */
+    public CardDeck() {
+        cards = new HashMap<>();
+    }
+
+    /**
+     * Initializes a card deck from the map of cards.
+     * @param cards Maps card type to number of cards in the deck.
+     */
+    public CardDeck(Map<C, Integer> cards) {
+        this.cards = new HashMap<>(cards);
+    }
 
     /**
      * Add a card to the deck.
@@ -97,6 +113,13 @@ public class CardDeck<C extends Card> {
             }
         }
         return null;
+    }
+
+    public boolean isEmpty() {
+        if(totalCards() == 0) {
+            return true;
+        }
+        return false;
     }
 
     @Override
