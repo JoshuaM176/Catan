@@ -113,7 +113,8 @@ public class ActionManager {
      */
     @SuppressWarnings("unchecked")
     private void replaceSelf(JSONObject jsonObject, int playerNum) {
-        if(((String)jsonObject.get("players")).equals("self")) {
+        System.out.println(jsonObject);
+        if("self".equals(jsonObject.get("players"))) {
             jsonObject.put("players", JSONUtil.ArrayToJSON(new Integer[]{playerNum}));
         }
     }

@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 
 import luis.josh.catan.host.HostLogger;
+import luis.josh.catan.host.game.DefaultGame;
 import luis.josh.catan.host.game.Game;
 
 public class GameTest {
@@ -18,9 +19,7 @@ public class GameTest {
         Consumer<JSONObject> messageQueue = (data) -> {
             logger.info("Sent message: {}", data);
         };
-        Game testGame = new Game(messageQueue, 2) {
-
-        };
+        Game testGame = new DefaultGame(messageQueue, 2);
 
         // Player 0 place first settlement
         JSONObject action = new JSONObject(
@@ -183,6 +182,15 @@ public class GameTest {
 
         testGame.acceptData(action);
 
+        action = new JSONObject(Map.of(
+            "action", "useDevelopmentCard",
+            "player", 0,
+            "data", new JSONObject(Map.of(
+                "card", "knight"
+            ))
+        ));
+
+        testGame.acceptData(action);
 
         System.out.println(testGame);
     }

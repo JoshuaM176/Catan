@@ -28,7 +28,7 @@ public class PurchaseDevelopmentCard implements Action{
         if(cardDeck.isEmpty()){
             return new JSONObject[]{EventResponses.eventResponse(
                 "devCardPurchaseFailed",
-                player,
+                player.playerNum(),
                 new JSONObject(Map.of("message", "No development cards remaining."))
             )};
         }

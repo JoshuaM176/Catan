@@ -137,7 +137,10 @@ public class Player implements ResourceListener{
      * Spends a single dev card and sends corresponding message.
      * @param resource The card type to use.
      */
-    public void useDevCard(DevelopmentCard card) {
+    public boolean useDevCard(DevelopmentCard card) {
+        if(!devCards.hasCards(Map.of(card, 1))) {
+            return false;
+        }
         devCards.subtractCard(card);
         messageQueue.accept(
             EventResponses.eventResponse(
@@ -151,6 +154,7 @@ public class Player implements ResourceListener{
                 )
             )
         );
+        return true;
     }
 
     /**
