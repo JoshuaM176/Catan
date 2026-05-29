@@ -90,6 +90,7 @@ public class PlaceRoad implements Action{
             tile.vertices[edge].addConnection(player);
             tile.vertices[edge+1].addConnection(player);
         }
+        Action.addPlayer(data, player.playerNum());
         return new JSONObject[]{
             EventResponses.eventResponse(
                "placedRoad",

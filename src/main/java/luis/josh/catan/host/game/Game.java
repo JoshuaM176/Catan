@@ -1,6 +1,5 @@
 package luis.josh.catan.host.game;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -20,8 +19,8 @@ import luis.josh.catan.host.game.eventmanager.EventManager;
 import luis.josh.catan.host.game.events.DiscardEvent;
 import luis.josh.catan.host.game.events.Event;
 import luis.josh.catan.host.game.events.MoveRobberEvent;
+import luis.josh.catan.host.game.events.SetupEvent;
 import luis.josh.catan.host.game.player.Player;
-import luis.josh.catan.util.JSONUtil;
 import luis.josh.catan.host.HostLogger;
 import luis.josh.catan.host.game.actionmanager.ActionManager;
 import luis.josh.catan.host.game.actions.*;
@@ -50,9 +49,14 @@ public abstract class Game {
         }
         this.actionManager = generateActions(board, this.players);
         this.eventManager = new EventManager(board, this.players, this.messageQueue, generateEvents());
+        startGame();
     }
 
-    private Board generateBoard() {
+    protected void startGame() {
+        processEvent(EventResponses.eventResponse("setupTrigger", "none", new JSONObject()));
+    }    
+
+    protected Board generateBoard() {
         return new Board(
             getTilePattern(),
             getNumberTokenAssigner(),
@@ -61,7 +65,7 @@ public abstract class Game {
         );
     };
 
-    public int[][] getTilePattern() {
+    protected int[][] getTilePattern() {
         return new int[][] {
             {0,1,1,1,0},
             {1,1,1,1,0},
@@ -71,12 +75,12 @@ public abstract class Game {
         };
     }
 
-    public NumberTokenAssigner getNumberTokenAssigner() {
+    protected NumberTokenAssigner getNumberTokenAssigner() {
         int[] numberTokens = new int[] {5,2,6,3,8,10,9,12,11,4,8,10,9,4,5,6,3,11};
         return new DefaultNumberTokenAssigner(numberTokens);
     }
 
-    public TileCreator getTileCreator() {
+    protected TileCreator getTileCreator() {
         return new DefaultTileCreator(Map.of(
             Resource.STONE, 3,
             Resource.BRICK, 3,
@@ -87,7 +91,7 @@ public abstract class Game {
         ));
     }
 
-    public HarborAssigner getHarborAssigner() {
+    protected HarborAssigner getHarborAssigner() {
         return new DefaultHarborAssigner(9,
             Map.of(
                 Resource.STONE, 1,
@@ -100,7 +104,7 @@ public abstract class Game {
         );
     }
 
-    public ActionManager generateActions(Board board, Player[] players) {
+    protected ActionManager generateActions(Board board, Player[] players) {
         ActionManager actionManager = new ActionManager(players, Map.of());
         for(Action action: generateDefaultActions(board, players)){
             actionManager.addAction(action);
@@ -108,7 +112,7 @@ public abstract class Game {
         return actionManager;
     };
 
-    public static Action[] generateDefaultActions(Board board, Player[] players) {
+    protected static Action[] generateDefaultActions(Board board, Player[] players) {
         return new Action[]{
             new PlaceCity(board, Map.of(
                 Resource.WHEAT, 2,
@@ -128,14 +132,15 @@ public abstract class Game {
         };
     }
 
-    public Map<String, Function<JSONObject, Event>> generateEvents() {
+    protected Map<String, Function<JSONObject, Event>> generateEvents() {
         return generateDefaultEvents();
     }
 
-    public Map<String, Function<JSONObject, Event>> generateDefaultEvents() {
+    protected Map<String, Function<JSONObject, Event>> generateDefaultEvents() {
         return Map.of(
-            "moveRobberTrigger", data -> new MoveRobberEvent(data),
-            "discardTrigger", data -> new DiscardEvent(data)
+            "moveRobberTrigger", data -> new MoveRobberEvent(data, turn),
+            "discardTrigger", data -> new DiscardEvent(data),
+            "setupTrigger", data -> new SetupEvent(() -> prevTurn(), () -> nextTurn(), () -> turn)
         );
     }
 
@@ -165,9 +170,7 @@ public abstract class Game {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void processEvent(JSONObject data) {
-        data.put("turn", turn);
         logger.debug("Processing event: {}", data);
         if(eventManager.processEvent(data)) {
             if(currentEvent == null) {
@@ -178,7 +181,7 @@ public abstract class Game {
     }
 
     private void nextTurn() {
-        turn = turn >= players.length ? turn++ : 0;
+        turn = (turn >= players.length) ? 0 : ++turn;
         messageQueue.accept(EventResponses.eventResponse(
             "changeTurn",
             "all",
@@ -189,7 +192,7 @@ public abstract class Game {
     }
 
     private void prevTurn() {
-        turn = turn <= 0 ? players.length - 1 : turn--;
+        turn = (turn <= 0) ? players.length - 1 : --turn;
         messageQueue.accept(EventResponses.eventResponse(
             "changeTurn",
             "all",

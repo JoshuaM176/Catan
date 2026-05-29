@@ -11,7 +11,6 @@ import org.json.simple.JSONObject;
 import luis.josh.catan.host.game.actionmanager.ActionManager;
 import luis.josh.catan.host.game.actions.MoveRobber;
 import luis.josh.catan.host.game.player.Player;
-import luis.josh.catan.util.JSONUtil;
 
 public class MoveRobberEvent implements Event{
 
@@ -19,15 +18,15 @@ public class MoveRobberEvent implements Event{
     private boolean finished = false;
     private int turn;
 
-    public MoveRobberEvent(JSONObject data) {
-        turn = (int)data.get("turn");
+    public MoveRobberEvent(JSONObject data, int turn) {
+        this.turn = turn;
     }
 
     public void initialize(Board board, Player[] players, Consumer<JSONObject> messageQueue) {
         actionManager = new ActionManager(players, Map.of("moveRobber", new MoveRobber(board, players))).setWaitForTurn(() -> turn);
         messageQueue.accept(ActionResponses.actionResponse(
             "moveRobber",
-            JSONUtil.ArrayToJSON(new Integer[]{turn}),
+            turn,
             new JSONObject()
             ));
     }

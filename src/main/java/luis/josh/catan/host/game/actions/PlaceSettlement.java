@@ -63,6 +63,7 @@ public class PlaceSettlement implements Action{
             }
         }
         tile.vertices[vertex].setPlacedItem(new Settlement(player));
+        Action.addPlayer(data, player.playerNum());
         return new JSONObject[]{
             EventResponses.eventResponse(
                 "placedSettlement",

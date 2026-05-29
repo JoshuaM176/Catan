@@ -11,7 +11,6 @@ import luis.josh.catan.host.game.actions.Discard;
 import luis.josh.catan.host.game.board.Board;
 import luis.josh.catan.host.game.events.messages.ActionResponses;
 import luis.josh.catan.host.game.player.Player;
-import luis.josh.catan.util.JSONUtil;
 
 public class DiscardEvent implements Event {
 
@@ -39,7 +38,7 @@ public class DiscardEvent implements Event {
             finished[i] = false;
             messageQueue.accept(ActionResponses.actionResponse(
                 "discard",
-                JSONUtil.ArrayToJSON(new Integer[]{i}),
+                i,
                 new JSONObject(Map.of("numCards", (int)Math.floor(player.totalResources()*discardPercent)))
             ));
 

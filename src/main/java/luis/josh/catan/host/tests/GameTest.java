@@ -22,7 +22,7 @@ public class GameTest {
 
         };
 
-        // Player 1 place first settlement
+        // Player 0 place first settlement
         JSONObject action = new JSONObject(
             Map.of(
                 "action", "placeSettlement",
@@ -40,16 +40,16 @@ public class GameTest {
 
         testGame.acceptData(action);
         
-        // Player 1 place first road
+        // Player 0 place first road
         action = new JSONObject(
             Map.of(
                 "action", "placeRoad",
                 "player",0,
                 "data", new JSONObject(Map.of(
                     "tile", new JSONObject(Map.of(
-                        "row", 1,
-                        "col", 1,
-                        "edge", 1
+                        "row", 3,
+                        "col", 3,
+                        "edge",4
                     )),
                     "start", 1
                 ))
@@ -62,14 +62,14 @@ public class GameTest {
         action = new JSONObject(
             Map.of(
                 "action", "placeSettlement",
-                "player", 0,
+                "player", 1,
                 "data", new JSONObject(Map.of(
                     "tile", new JSONObject(Map.of(
                         "row", 1,
                         "col", 1,
                         "vertex", 3
                     )),
-                    "start", 2
+                    "start", 1
                 ))
             )
         );
@@ -80,21 +80,21 @@ public class GameTest {
         action = new JSONObject(
             Map.of(
                 "action", "placeRoad",
-                "player", 0,
+                "player", 1,
                 "data", new JSONObject(Map.of(
                     "tile", new JSONObject(Map.of(
                         "row", 1,
                         "col", 1,
                         "edge", 2
                     )),
-                    "start", 2
+                    "start", 1
                 ))
             )
         );
 
         testGame.acceptData(action);
         
-        // Player 1 try placing another road
+        // Player 0 try placing another road
         action = new JSONObject(
             Map.of(
                 "action", "placeRoad",

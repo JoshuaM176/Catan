@@ -8,6 +8,10 @@ import luis.josh.catan.util.JSONUtil;
 
 public class EventResponses {
 
+    public static JSONObject eventResponse(String event, int playerNum, JSONObject data) {
+        return eventResponse(event, JSONUtil.ArrayToJSON(new Integer[]{playerNum}), data);
+    }
+
     public static JSONObject eventResponse(String event, Object players, JSONObject data) {
         JSONObject rtn = new JSONObject(
             Map.of(
@@ -97,7 +101,7 @@ public class EventResponses {
                 "message", "Please wait for your turn."
             )
         );
-        return eventResponse("waitForTurn", JSONUtil.ArrayToJSON(new Integer[]{player}), data);
+        return eventResponse("waitForTurn", player, data);
     }
 
     public static JSONObject unavailableAction() {
@@ -115,6 +119,6 @@ public class EventResponses {
                 "message", "Action unavailable."
             )
         );
-        return eventResponse("actionUnavailable", JSONUtil.ArrayToJSON(new Integer[]{playerNum}), data);
+        return eventResponse("actionUnavailable", playerNum, data);
     }
 }

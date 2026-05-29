@@ -60,6 +60,7 @@ public class PlaceCity implements Action{
             return new JSONObject[]{EventResponses.genericPurchaseFailed("City")};
         }
         tile.vertices[vertex].setPlacedItem(new City(player));
+        Action.addPlayer(data, player.playerNum());
         return new JSONObject[]{
             EventResponses.eventResponse(
                "placedCity",
@@ -68,5 +69,5 @@ public class PlaceCity implements Action{
             )
         };
     }
-    
+
 }

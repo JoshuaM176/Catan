@@ -42,6 +42,7 @@ public class ActionManager {
      */
     public ActionManager(Player[] players, Action[] actions) {
         this.players = players;
+        this.actionMap = new HashMap<>();
         for(Action action: actions) {
             addAction(action);
         }
@@ -61,7 +62,7 @@ public class ActionManager {
 
     /**
      * Add an action automatically setting name to the action's className as camelCase.
-     * @param action Action to execute when the name is used
+     * @param action Action to execute when the name is used.
      */
     public void addAction(Action action) {
         String name = action.getClass().getSimpleName();
@@ -72,8 +73,8 @@ public class ActionManager {
 
     /**
      * Adds an action to the map of available actions.
-     * @param name Name that will be used to reference the action
-     * @param action Action to execute when that name is used
+     * @param name Name that will be used to reference the action.
+     * @param action Action to execute when that name is used.
      */
     public void addAction(String name, Action action) {
         actionMap.put(name, action);
@@ -82,8 +83,8 @@ public class ActionManager {
     /**
      * Executes the action from the given data. Data should be formatted as
      * {"action": "actionName", "player": playerNum, "data": {actionData}}
-     * @param data The data containing information about the action to execute
-     * @return Array of EventResponses resulting from the executed action
+     * @param data The data containing information about the action to execute.
+     * @return Array of EventResponses resulting from the executed action.
      */
     public JSONObject[] executeAction(JSONObject data) {
         int playerNum = (int)data.get("player");
@@ -107,8 +108,8 @@ public class ActionManager {
 
     /**
      * Replaces "self" in {"players": "self"} with [playerNum].
-     * @param jsonObject The json object to replace self in
-     * @param playerNum The playerNum represented by self
+     * @param jsonObject The json object to replace self in.
+     * @param playerNum The playerNum represented by self.
      */
     @SuppressWarnings("unchecked")
     private void replaceSelf(JSONObject jsonObject, int playerNum) {

@@ -35,6 +35,10 @@ public class Player implements ResourceListener{
         this.playerNum = playerNum;
     }
 
+    public int playerNum() {
+        return playerNum;
+    }
+
     @Override
     public void addResource(Resource resource) {
         if(resources.containsKey(resource)) {
