@@ -1,6 +1,8 @@
 package luis.josh.catan.host.game.player;
 
 import luis.josh.catan.host.game.board.resources.ResourceListener;
+import luis.josh.catan.host.game.gamepieces.cards.CardDeck;
+import luis.josh.catan.host.game.gamepieces.cards.ResourceCard;
 import luis.josh.catan.host.game.gamepieces.developmentcards.DevelopmentCard;
 
 import java.util.HashMap;
@@ -18,7 +20,7 @@ import luis.josh.catan.host.game.board.Harbor;
 import luis.josh.catan.host.game.board.resources.Resource;
 
 public class Player implements ResourceListener{
-    Map<Resource, Integer> resources = new HashMap<Resource, Integer>(); // Card Resources
+    CardDeck<ResourceCard> resources = new CardDeck<>();
     List<DevelopmentCard> developmentCards = new ArrayList<DevelopmentCard>();
     public List<Harbor> harbors = new ArrayList<Harbor>();
     private int victoryPoints = 0;
@@ -52,12 +54,7 @@ public class Player implements ResourceListener{
 
     @Override
     public void addResource(Resource resource) {
-        if(resources.containsKey(resource)) {
-            resources.put(resource, resources.get(resource)+1);
-        }
-        else {
-            resources.put(resource, 1);
-        }
+        resources.addCard(new ResourceCard(resource));
         messageQueue.accept(
             EventResponses.eventResponse(
                 "gainedResource",
@@ -78,7 +75,7 @@ public class Player implements ResourceListener{
      * @param resource The resource type to spend.
      */
     public void subtractResource(Resource resource) {
-        resources.put(resource, resources.get(resource)-1);
+        resources.subtractCard(new ResourceCard(resource));
         messageQueue.accept(
             EventResponses.eventResponse(
                 "spentResource",
@@ -100,7 +97,7 @@ public class Player implements ResourceListener{
      * @param amount Amount of that resource to spend.
      */
     public void subtractResource(Resource resource, int amount) {
-        resources.put(resource, resources.get(resource)-amount);
+        resources.subtractCards(new ResourceCard(resource), amount);
         messageQueue.accept(
             EventResponses.eventResponse(
                 "spentResource",
@@ -122,15 +119,11 @@ public class Player implements ResourceListener{
      * @return True if the player has enough resources.
      */
     private boolean hasResources(Map<Resource, Integer> resources) {
+        Map<ResourceCard, Integer> resourceCards = new HashMap<>();
         for(Resource resource: resources.keySet()) {
-            if(this.resources.get(resource) == null) {
-                return false;
-            }
-            if(this.resources.get(resource) < resources.get(resource)) {
-                return false;
-            }
+            resourceCards.put(new ResourceCard(resource), resources.get(resource));
         }
-        return true;
+        return this.resources.hasCards(resourceCards);
     }
 
     /**
@@ -138,30 +131,16 @@ public class Player implements ResourceListener{
      * @return The random resource selected.
      */
     public Resource stealResource() {
-        Random random = new Random();
-        int totalResources = totalResources();
-        if(totalResources > 0){
-            int randomInt = random.nextInt()%totalResources + 1;
-            for(Resource resource: resources.keySet()) {
-                randomInt -= resources.get(resource);
-                if(randomInt <= 0) {
-                    subtractResource(resource);
-                    return resource;
-                }
-            }
-        }
-        return null;
+        ResourceCard randomCard = resources.drawCard();
+        if(randomCard == null) { return null; }
+        return randomCard.resource();
     }
 
     /**
      * @return The sum total of all resources owned by this player.
      */
     public int totalResources() {
-        int totalResources = 0;
-        for(int count: resources.values()) {
-            totalResources += count;
-        }
-        return totalResources;
+        return resources.totalCards();
     }
 
     /**
@@ -208,10 +187,6 @@ public class Player implements ResourceListener{
 
     @Override
     public String toString() {
-        String string = "";
-        for(Resource resource: resources.keySet()) {
-            string += resource.name() + " :: " + resources.get(resource) + " ";
-        }
-        return string;
+        return resources.toString();
     }
 }
