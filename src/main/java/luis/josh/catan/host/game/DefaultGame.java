@@ -24,6 +24,7 @@ import luis.josh.catan.host.game.gamepieces.cards.CardDeck;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.DevelopmentCard;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.Knight;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.Monopoly;
+import luis.josh.catan.host.game.gamepieces.cards.developmentcards.VictoryPoint;
 import luis.josh.catan.host.game.player.Player;
 
 public class DefaultGame extends Game{
@@ -115,7 +116,8 @@ public class DefaultGame extends Game{
     private CardDeck<DevelopmentCard> generateDevCards() {
         CardDeck<DevelopmentCard> cardDeck = new CardDeck<>(Map.of(
             new Knight(), 14,
-            new Monopoly(players), 2
+            new Monopoly(players), 2,
+            new VictoryPoint(), 5
         ));
         return cardDeck;
     }

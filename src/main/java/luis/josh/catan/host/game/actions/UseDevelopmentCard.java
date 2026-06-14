@@ -28,14 +28,16 @@ public class UseDevelopmentCard implements Action{
             return new JSONObject[]{EventResponses.eventResponse(
                 "devCardNotFound",
                 "self",
-                new JSONObject(Map.of("message", "Dev card does not exist."))
+                new JSONObject(Map.of("message", "Dev card does not exist.")),
+                400
             )};
         }
         if(!player.useDevCard(card)) {
             return new JSONObject[]{EventResponses.eventResponse(
                 "noDevCardAvailable",
                 "self",
-                new JSONObject(Map.of("message", "You do not own this dev card."))
+                new JSONObject(Map.of("message", "You do not own this dev card.")),
+                400
             )};
         }
         return card.execute(data, player);

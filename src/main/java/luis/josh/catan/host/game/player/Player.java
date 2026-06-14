@@ -21,11 +21,11 @@ import luis.josh.catan.host.game.board.resources.Resource;
 public class Player implements ResourceListener{
     CardDeck<ResourceCard> resources = new CardDeck<>();
     CardDeck<DevelopmentCard> devCards = new CardDeck<>();
+    CardDeck<DevelopmentCard> usedDevCards = new CardDeck<>();
     public List<Harbor> harbors = new ArrayList<Harbor>();
     private int victoryPoints = 0;
     private Consumer<JSONObject> messageQueue;
     private int playerNum;
-    private int knightsPlayed = 0;
 
     /**
      * Constructor with no messageQueue or playerNum for testing purposes.
@@ -164,6 +164,7 @@ public class Player implements ResourceListener{
             return false;
         }
         devCards.subtractCard(card);
+        usedDevCards.addCard(card);
         messageQueue.accept(
             EventResponses.eventResponse(
                 "usedDevCard",
@@ -262,10 +263,6 @@ public class Player implements ResourceListener{
         );
     }
 
-    public void addKnight() {
-        knightsPlayed++;
-    }
-
     @Override
     public String toString() {
         return String.format(
@@ -279,8 +276,7 @@ public class Player implements ResourceListener{
             devCards.toString(),
             resources.toString(),
             harbors.toString(),
-            victoryPoints,
-            knightsPlayed
+            victoryPoints
         );
     }
 }

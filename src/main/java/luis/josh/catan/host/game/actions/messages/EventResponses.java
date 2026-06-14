@@ -9,15 +9,24 @@ import luis.josh.catan.util.JSONUtil;
 public class EventResponses {
 
     public static JSONObject eventResponse(String event, int playerNum, JSONObject data) {
-        return eventResponse(event, JSONUtil.ArrayToJSON(new Integer[]{playerNum}), data);
+        return eventResponse(event, JSONUtil.ArrayToJSON(new Integer[]{playerNum}), data, 200);
+    }
+
+    public static JSONObject eventResponse(String event, int playerNum, JSONObject data, int code) {
+        return eventResponse(event, JSONUtil.ArrayToJSON(new Integer[]{playerNum}), data, code);
     }
 
     public static JSONObject eventResponse(String event, Object players, JSONObject data) {
+        return eventResponse(event, players, data, 200);
+    }
+
+    public static JSONObject eventResponse(String event, Object players, JSONObject data, int code) {
         JSONObject rtn = new JSONObject(
             Map.of(
                 "event", event,
                 "players", players,
-                "data", data
+                "data", data,
+                "code", code
             )
         );
         return rtn;
@@ -64,7 +73,7 @@ public class EventResponses {
 
     // Error Messages
     public static JSONObject purchaseFailed(JSONObject data) {
-        return eventResponse("purchaseFailed", "self", data);
+        return eventResponse("purchaseFailed", "self", data, 400);
     }
 
     public static JSONObject genericPurchaseFailed(String item) {
@@ -78,7 +87,7 @@ public class EventResponses {
         JSONObject data = new JSONObject(
             Map.of("message", "Invalid location.")
         );
-        return eventResponse("moveRobberFailed", "self", data);
+        return eventResponse("moveRobberFailed", "self", data, 400);
     }
 
     public static JSONObject roadConnectionFailure() {
@@ -87,7 +96,7 @@ public class EventResponses {
                 "message", "Road must be connected to existing roads."
             )
         );
-        return eventResponse("placeRoadFailed", "self", data);
+        return eventResponse("placeRoadFailed", "self", data, 400);
     }
 
     public static JSONObject firstRoadConnectionFailure() {
@@ -96,7 +105,7 @@ public class EventResponses {
                 "message", "Road must be connected to the new settlement."
             )
         );
-        return eventResponse("placeRoadFailed", "self", data);
+        return eventResponse("placeRoadFailed", "self", data, 400);
     }
 
     public static JSONObject waitForTurn(int player) {
@@ -105,7 +114,7 @@ public class EventResponses {
                 "message", "Please wait for your turn."
             )
         );
-        return eventResponse("waitForTurn", player, data);
+        return eventResponse("waitForTurn", player, data, 400);
     }
 
     public static JSONObject unavailableAction() {
@@ -114,7 +123,7 @@ public class EventResponses {
                 "message", "Action unavailable."
             )
         );
-        return eventResponse("actionUnavailable", "self", data);
+        return eventResponse("actionUnavailable", "self", data, 400);
     }
 
     public static JSONObject unavailableAction(int playerNum) {
@@ -123,6 +132,6 @@ public class EventResponses {
                 "message", "Action unavailable."
             )
         );
-        return eventResponse("actionUnavailable", playerNum, data);
+        return eventResponse("actionUnavailable", playerNum, data, 400);
     }
 }

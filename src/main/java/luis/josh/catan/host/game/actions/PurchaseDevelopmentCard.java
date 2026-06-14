@@ -29,7 +29,8 @@ public class PurchaseDevelopmentCard implements Action{
             return new JSONObject[]{EventResponses.eventResponse(
                 "devCardPurchaseFailed",
                 player.playerNum(),
-                new JSONObject(Map.of("message", "No development cards remaining."))
+                new JSONObject(Map.of("message", "No development cards remaining.")),
+                400
             )};
         }
         player.addDevCard(cardDeck.drawCard());

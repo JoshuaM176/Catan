@@ -36,13 +36,13 @@ public class PlaceRoad implements Action{
             JSONObject message = new JSONObject(
                 Map.of("message", "Cannot build in the ocean.")
             );
-            return new JSONObject[]{EventResponses.eventResponse("placeRoadFailed", "self", message)};
+            return new JSONObject[]{EventResponses.eventResponse("placeRoadFailed", "self", message, 400)};
         }
         if(tile.edges[edge].placedItem != null) {
             JSONObject message = new JSONObject(
                 Map.of("message", "Road already exists here.")
             );
-            return new JSONObject[]{EventResponses.eventResponse("placeRoadFailed", "self", message)};
+            return new JSONObject[]{EventResponses.eventResponse("placeRoadFailed", "self", message, 400)};
         }
         if(start == 0) {
             if(edge == 5) {

@@ -35,26 +35,26 @@ public class PlaceCity implements Action{
             JSONObject message = new JSONObject(
                 Map.of("message", "Cannot build in the ocean.")
             );
-            return new JSONObject[]{EventResponses.eventResponse("placeCityFailed", "self", message)};
+            return new JSONObject[]{EventResponses.eventResponse("placeCityFailed", "self", message, 400)};
         }
         VertexPlaceable placedItem = tile.vertices[vertex].placedItem;
         if(placedItem == null) {
             JSONObject message = new JSONObject(
                 Map.of("message", "City requires settlement to build on.")
             );
-            return new JSONObject[]{EventResponses.eventResponse("placeCityFailed", "self", message)};
+            return new JSONObject[]{EventResponses.eventResponse("placeCityFailed", "self", message, 400)};
         }
         if(player != placedItem.getPlayer()) {
             JSONObject message = new JSONObject(
                 Map.of("message", "Cannot build on another player's property.")
             );
-            return new JSONObject[]{EventResponses.eventResponse("placeCityFailed", "self", message)};
+            return new JSONObject[]{EventResponses.eventResponse("placeCityFailed", "self", message, 400)};
         }
         if(!(placedItem instanceof Settlement)) {
             JSONObject message = new JSONObject(
                 Map.of("message", "City requires settlement to build on.")
             );
-            return new JSONObject[]{EventResponses.eventResponse("placeCityFailed", "self", message)};
+            return new JSONObject[]{EventResponses.eventResponse("placeCityFailed", "self", message, 400)};
         }
         if(!player.checkAndPurchase(resourceCost)) {
             return new JSONObject[]{EventResponses.genericPurchaseFailed("City")};

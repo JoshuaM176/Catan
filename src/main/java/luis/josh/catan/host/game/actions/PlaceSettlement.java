@@ -35,20 +35,20 @@ public class PlaceSettlement implements Action{
             JSONObject message = new JSONObject(
                 Map.of("message", "Cannot build in the ocean.")
             );
-            return new JSONObject[]{EventResponses.eventResponse("placeSettlementFailed", "self", message)};
+            return new JSONObject[]{EventResponses.eventResponse("placeSettlementFailed", "self", message, 400)};
         }
         if(!board.isValidPlacement(row, col, vertex)) {
             JSONObject message = new JSONObject(
                 Map.of("message", "Cannot place within 1 distance of an existing settlement.")
             );
-            return new JSONObject[]{EventResponses.eventResponse("placeSettlementFailed", "self", message)};
+            return new JSONObject[]{EventResponses.eventResponse("placeSettlementFailed", "self", message, 400)};
         }
         if(start == 0) {
             if(!tile.vertices[vertex].isConnected(player)) {
                 JSONObject message = new JSONObject(
                     Map.of("message", "No roads connected.")
                 );
-                return new JSONObject[]{EventResponses.eventResponse("placeSettlementFailed", "self", message)};
+                return new JSONObject[]{EventResponses.eventResponse("placeSettlementFailed", "self", message, 400)};
             }
             if(!player.checkAndPurchase(resourceCost)) {
                 return new JSONObject[]{EventResponses.genericPurchaseFailed("Settlement")};
