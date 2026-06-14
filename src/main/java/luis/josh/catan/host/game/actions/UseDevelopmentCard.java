@@ -32,7 +32,7 @@ public class UseDevelopmentCard implements Action{
                 400
             )};
         }
-        if(!player.useDevCard(card)) {
+        if(!player.hasDevCard(card)) {
             return new JSONObject[]{EventResponses.eventResponse(
                 "noDevCardAvailable",
                 "self",
@@ -40,7 +40,14 @@ public class UseDevelopmentCard implements Action{
                 400
             )};
         }
-        return card.execute(data, player);
+        JSONObject[] results = card.execute(data, player);
+        if(results.length > 0) {
+            int code = (int)results[0].get("code");
+            if(code >= 200 && code < 300) {
+                player.useDevCard(card);
+            }
+        }
+        return results;
     }
 
   

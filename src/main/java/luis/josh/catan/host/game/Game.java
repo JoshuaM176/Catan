@@ -40,7 +40,7 @@ public abstract class Game {
         for(int i = 0; i < players; i++) {
             this.players[i] = new Player(e -> processEvent(e), i);
         }
-        this.actionManager = new ActionManager(this.players, generateActions(board, this.players));
+        this.actionManager = new ActionManager(this.players, generateActions(board, this.players)).setWaitForTurn(() -> turn);
         this.eventManager = new EventManager(board, this.players, this.messageQueue, generateEvents());
         startGame();
     }

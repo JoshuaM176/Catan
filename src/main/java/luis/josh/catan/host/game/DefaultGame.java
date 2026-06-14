@@ -19,12 +19,15 @@ import luis.josh.catan.host.game.board.tile.tilecreator.TileCreator;
 import luis.josh.catan.host.game.events.DiscardEvent;
 import luis.josh.catan.host.game.events.Event;
 import luis.josh.catan.host.game.events.MoveRobberEvent;
+import luis.josh.catan.host.game.events.RoadBuildingEvent;
 import luis.josh.catan.host.game.events.SetupEvent;
 import luis.josh.catan.host.game.gamepieces.cards.CardDeck;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.DevelopmentCard;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.Knight;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.Monopoly;
+import luis.josh.catan.host.game.gamepieces.cards.developmentcards.RoadBuilding;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.VictoryPoint;
+import luis.josh.catan.host.game.gamepieces.cards.developmentcards.YearOfPlenty;
 import luis.josh.catan.host.game.player.Player;
 
 public class DefaultGame extends Game{
@@ -117,7 +120,9 @@ public class DefaultGame extends Game{
         CardDeck<DevelopmentCard> cardDeck = new CardDeck<>(Map.of(
             new Knight(), 14,
             new Monopoly(players), 2,
-            new VictoryPoint(), 5
+            new VictoryPoint(), 5,
+            new RoadBuilding(), 2,
+            new YearOfPlenty(), 2
         ));
         return cardDeck;
     }
@@ -127,7 +132,8 @@ public class DefaultGame extends Game{
         return Map.of(
             "moveRobberTrigger", data -> new MoveRobberEvent(data, turn),
             "discardTrigger", data -> new DiscardEvent(data),
-            "setupTrigger", data -> new SetupEvent(() -> prevTurn(), () -> nextTurn(), () -> turn)
+            "setupTrigger", data -> new SetupEvent(() -> prevTurn(), () -> nextTurn(), () -> turn),
+            "roadBuildingTrigger", data -> new RoadBuildingEvent(data, turn)
         );
     }
 }

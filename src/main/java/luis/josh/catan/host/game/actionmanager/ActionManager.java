@@ -56,7 +56,7 @@ public class ActionManager {
      */
     public ActionManager setWaitForTurn(Supplier<Integer> turn) {
         this.turn = turn;
-        waitForTurn = false;
+        waitForTurn = true;
         return this;
     }
 

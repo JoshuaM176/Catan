@@ -71,6 +71,15 @@ public class CardDeck<C extends Card> {
     }
 
     /**
+     * Check if the deck contains at least one of the card passed.
+     * @param card The card to check for.
+     * @return True if the deck has the card.
+     */
+    public boolean hasCard(C card) {
+        return cards.get(card) > 0;
+    }
+
+    /**
      * Check if the deck contains equal to or greater than the cards.
      * @param cards Map of type of card to amount to check for.
      * @return True if the deck has the cards.

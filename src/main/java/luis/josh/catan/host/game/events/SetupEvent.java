@@ -1,5 +1,6 @@
 package luis.josh.catan.host.game.events;
 
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -9,7 +10,6 @@ import luis.josh.catan.host.game.actionmanager.ActionManager;
 import luis.josh.catan.host.game.actions.Action;
 import luis.josh.catan.host.game.actions.PlaceRoad;
 import luis.josh.catan.host.game.actions.PlaceSettlement;
-import luis.josh.catan.host.game.actions.messages.EventResponses;
 import luis.josh.catan.host.game.board.Board;
 import luis.josh.catan.host.game.events.messages.ActionResponses;
 import luis.josh.catan.host.game.player.Player;
@@ -41,8 +41,8 @@ public class SetupEvent implements Event{
 
     @Override
     public void initialize(Board board, Player[] players, Consumer<JSONObject> messageQueue) {
-        settlementActionManager = new ActionManager(players, new Action[]{new PlaceSettlement(board, null)}).setWaitForTurn(turn);
-        roadActionManager = new ActionManager(players, new Action[]{new PlaceRoad(board, null)}).setWaitForTurn(turn);
+        settlementActionManager = new ActionManager(players, new Action[]{new PlaceSettlement(board, Map.of())}).setWaitForTurn(turn);
+        roadActionManager = new ActionManager(players, new Action[]{new PlaceRoad(board, Map.of())}).setWaitForTurn(turn);
         turnHandler = new TurnHandler(players.length);
         this.messageQueue = messageQueue;
         sendAction();
@@ -50,10 +50,6 @@ public class SetupEvent implements Event{
 
     @Override
     public JSONObject[] acceptData(JSONObject data) {
-        int playerNum = (int)data.get("player");
-        if(playerNum != turn.get()) {
-            return new JSONObject[]{EventResponses.waitForTurn(playerNum)};
-        }
         JSONObject[] results;
         if(placedSettlement) {
             results = roadActionManager.executeAction(data);

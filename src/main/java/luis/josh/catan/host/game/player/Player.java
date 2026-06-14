@@ -156,13 +156,22 @@ public class Player implements ResourceListener{
     }
 
     /**
+     * Return true if the user has the given dev card.
+     * @param card The card to check for.
+     * @return True if user has the card.
+     */
+    public boolean hasDevCard(DevelopmentCard card) {
+        if(!devCards.hasCards(Map.of(card, 1))) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Spends a single dev card and sends corresponding message.
      * @param resource The card type to use.
      */
     public boolean useDevCard(DevelopmentCard card) {
-        if(!devCards.hasCards(Map.of(card, 1))) {
-            return false;
-        }
         devCards.subtractCard(card);
         usedDevCards.addCard(card);
         messageQueue.accept(
@@ -271,7 +280,6 @@ public class Player implements ResourceListener{
             Resources: %s
             Harbors: %s
             Victory Points: %d
-            Knights: %d
             """,
             devCards.toString(),
             resources.toString(),

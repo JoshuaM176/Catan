@@ -59,6 +59,14 @@ public class EventResponses {
         );
     }
 
+    public static JSONObject roadBuildingTrigger(int numRoads) {
+        return eventResponse(
+            "roadBuildingTrigger",
+            "none",
+            new JSONObject(Map.of("numRoads", numRoads))
+        );
+    }
+
     public static JSONObject discardTrigger(int cardLimit, double discardPercent) {
         JSONObject data = new JSONObject(Map.of(
             "cardLimit", cardLimit,
