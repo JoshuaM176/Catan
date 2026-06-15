@@ -28,7 +28,7 @@ public class UseDevelopmentCard implements Action{
             return new JSONObject[]{EventResponses.eventResponse(
                 "devCardNotFound",
                 "self",
-                new JSONObject(Map.of("message", "Dev card does not exist.")),
+                new JSONObject(Map.of("message", "Dev card " + cardName + " does not exist.")),
                 400
             )};
         }
@@ -46,6 +46,9 @@ public class UseDevelopmentCard implements Action{
             if(code >= 200 && code < 300) {
                 player.useDevCard(card);
             }
+        }
+        else{
+            player.useDevCard(card);
         }
         return results;
     }

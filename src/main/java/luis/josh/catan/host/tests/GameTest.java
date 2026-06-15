@@ -3,12 +3,15 @@ package luis.josh.catan.host.tests;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 
 import luis.josh.catan.host.HostLogger;
-import luis.josh.catan.host.game.DefaultGame;
-import luis.josh.catan.host.game.Game;
+import luis.josh.catan.host.game.gamepieces.cards.developmentcards.Monopoly;
+import luis.josh.catan.host.game.gamepieces.cards.developmentcards.RoadBuilding;
+import luis.josh.catan.host.game.gamepieces.cards.developmentcards.YearOfPlenty;
+import luis.josh.catan.util.JSONUtil;
 
 public class GameTest {
 
@@ -19,7 +22,7 @@ public class GameTest {
         Consumer<JSONObject> messageQueue = (data) -> {
             logger.info("Sent message: {}", data);
         };
-        Game testGame = new DefaultGame(messageQueue, 2);
+        TestGame testGame = new TestGame(messageQueue, 2);
 
         // Player 0 place first settlement
         JSONObject action = new JSONObject(
@@ -165,22 +168,7 @@ public class GameTest {
 
         testGame.acceptData(action);
 
-        action = new JSONObject(Map.of(
-            "action", "rollDice",
-            "player", 0,
-            "data", new JSONObject()
-        ));
-        for(int i = 0; i < 4; i++) {
-            testGame.acceptData(action);
-        }
-
-        action = new JSONObject(Map.of(
-            "action", "purchaseDevelopmentCard",
-            "player", 0,
-            "data", new JSONObject()
-        ));
-
-        testGame.acceptData(action);
+        testGame.addDevCard(new Monopoly(testGame.players()), 0);
 
         action = new JSONObject(Map.of(
             "action", "useDevelopmentCard",
@@ -188,6 +176,36 @@ public class GameTest {
             "data", new JSONObject(Map.of(
                 "card", "monopoly",
                 "resource", "WHEAT"
+            ))
+        ));
+
+        testGame.acceptData(action);
+
+        testGame.addDevCard(new YearOfPlenty(), 0);
+
+        action = new JSONObject(Map.of(
+            "action", "useDevelopmentCard",
+            "player", 0,
+            "data", new JSONObject(Map.of(
+                "card", "yearOfPlenty2",
+                "resources", JSONUtil.ArrayToJSON(new JSONObject[]{
+                    new JSONObject(Map.of(
+                        "resource", "WHEAT",
+                        "count", 2
+                    ))
+                })
+            ))
+        ));
+
+        testGame.acceptData(action);
+
+        testGame.addDevCard(new RoadBuilding(), 0);
+
+        action = new JSONObject(Map.of(
+            "action", "useDevelopmentCard",
+            "player", 0,
+            "data", new JSONObject(Map.of(
+                "card", "roadBuilding2"
             ))
         ));
 

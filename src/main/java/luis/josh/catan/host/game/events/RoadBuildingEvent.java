@@ -21,6 +21,7 @@ public class RoadBuildingEvent implements Event{
     private int turn;
 
     public RoadBuildingEvent(JSONObject data, int turn) {
+        System.out.println(data);
         numRoads = (int)data.get("numRoads");
         this.turn = turn;
     }

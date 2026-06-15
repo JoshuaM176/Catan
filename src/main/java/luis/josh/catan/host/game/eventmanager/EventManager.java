@@ -41,8 +41,9 @@ public class EventManager {
         if(eventFunction == null) {
             return false;
         }
-        Event event = eventFunction.apply(data);
-        logger.info("Adding event to queue: {}. Data: {}", event.getName(), data);
+        JSONObject eventData = (JSONObject)data.get("data");
+        Event event = eventFunction.apply(eventData);
+        logger.info("Adding event to queue: {}. Data: {}", event.getName(), eventData);
         eventQueue.add(event);
         return true;
     }

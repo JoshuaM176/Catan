@@ -20,9 +20,8 @@ public class DiscardEvent implements Event {
     private double discardPercent;
 
     public DiscardEvent(JSONObject data) {
-        JSONObject eventData = (JSONObject)data.get("data");
-        cardLimit = (int)eventData.get("cardLimit");
-        discardPercent = (double)eventData.get("discardPercent");
+        cardLimit = (int)data.get("cardLimit");
+        discardPercent = (double)data.get("discardPercent");
     }
 
     @Override

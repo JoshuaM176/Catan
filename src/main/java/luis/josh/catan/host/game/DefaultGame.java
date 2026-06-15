@@ -1,5 +1,6 @@
 package luis.josh.catan.host.game;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -29,6 +30,7 @@ import luis.josh.catan.host.game.gamepieces.cards.developmentcards.RoadBuilding;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.VictoryPoint;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.YearOfPlenty;
 import luis.josh.catan.host.game.player.Player;
+import luis.josh.catan.host.game.svp.LargestArmy;
 import luis.josh.catan.host.game.svp.SVP;
 
 public class DefaultGame extends Game{
@@ -112,7 +114,10 @@ public class DefaultGame extends Game{
             ),
             new UseDevelopmentCard(new DevelopmentCard[]{
                 new Knight(),
-                new Monopoly(players)
+                new Monopoly(players),
+                new VictoryPoint(),
+                new RoadBuilding(),
+                new YearOfPlenty()
             })
         };
     }
@@ -140,7 +145,8 @@ public class DefaultGame extends Game{
 
     @Override
     protected Map<String, SVP[]> generateSpecialVictoryPoints() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'generateSpecialVictoryPoints'");
+        Map<String, SVP[]> specialVictoryPoints = new HashMap<>();
+        specialVictoryPoints.put("usedDevelopmentCard", new SVP[]{new LargestArmy(players, messageQueue)});
+        return specialVictoryPoints;
     }
 }
