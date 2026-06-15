@@ -14,6 +14,7 @@ import luis.josh.catan.host.game.board.tile.tilecreator.TileCreator;
 import luis.josh.catan.host.game.eventmanager.EventManager;
 import luis.josh.catan.host.game.events.Event;
 import luis.josh.catan.host.game.player.Player;
+import luis.josh.catan.host.game.svp.SVP;
 import luis.josh.catan.host.HostLogger;
 import luis.josh.catan.host.game.actionmanager.ActionManager;
 import luis.josh.catan.host.game.actions.*;
@@ -25,6 +26,7 @@ public abstract class Game {
     protected Board board;
     protected ActionManager actionManager;
     protected EventManager eventManager;
+    protected Map<String, SVP[]> specialVictoryPoints;
     protected Player[] players;
     protected int turn = 0;
     protected Event currentEvent = null;
@@ -42,6 +44,7 @@ public abstract class Game {
         }
         this.actionManager = new ActionManager(this.players, generateActions(board, this.players)).setWaitForTurn(() -> turn);
         this.eventManager = new EventManager(board, this.players, this.messageQueue, generateEvents());
+        this.specialVictoryPoints = generateSpecialVictoryPoints();
         startGame();
     }
 
@@ -67,6 +70,8 @@ public abstract class Game {
     protected abstract Action[] generateActions(Board board, Player[] players);
 
     protected abstract Map<String, Function<JSONObject, Event>> generateEvents();
+
+    protected abstract Map<String, SVP[]> generateSpecialVictoryPoints();
 
     public void acceptData(JSONObject data) {
         logger.info("Host recieved incoming message: {}", data);
@@ -101,6 +106,13 @@ public abstract class Game {
                 currentEvent = eventManager.next();
             }
         };
+        String eventName = (String)data.get("event");
+        SVP[] svps = specialVictoryPoints.get(eventName);
+        if(svps != null) {
+            for(SVP svp : svps) {
+                svp.performCheck();
+            }
+        }
         messageQueue.accept(data);
     }
 

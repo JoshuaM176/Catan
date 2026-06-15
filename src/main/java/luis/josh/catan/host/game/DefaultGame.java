@@ -29,6 +29,7 @@ import luis.josh.catan.host.game.gamepieces.cards.developmentcards.RoadBuilding;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.VictoryPoint;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.YearOfPlenty;
 import luis.josh.catan.host.game.player.Player;
+import luis.josh.catan.host.game.svp.SVP;
 
 public class DefaultGame extends Game{
   
@@ -135,5 +136,11 @@ public class DefaultGame extends Game{
             "setupTrigger", data -> new SetupEvent(() -> prevTurn(), () -> nextTurn(), () -> turn),
             "roadBuildingTrigger", data -> new RoadBuildingEvent(data, turn)
         );
+    }
+
+    @Override
+    protected Map<String, SVP[]> generateSpecialVictoryPoints() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'generateSpecialVictoryPoints'");
     }
 }

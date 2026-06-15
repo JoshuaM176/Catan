@@ -21,7 +21,7 @@ import luis.josh.catan.host.game.board.resources.Resource;
 public class Player implements ResourceListener{
     CardDeck<ResourceCard> resources = new CardDeck<>();
     CardDeck<DevelopmentCard> devCards = new CardDeck<>();
-    CardDeck<DevelopmentCard> usedDevCards = new CardDeck<>();
+    public CardDeck<DevelopmentCard> usedDevCards = new CardDeck<>();
     public List<Harbor> harbors = new ArrayList<Harbor>();
     private int victoryPoints = 0;
     private Consumer<JSONObject> messageQueue;
@@ -261,6 +261,33 @@ public class Player implements ResourceListener{
         messageQueue.accept(
             EventResponses.eventResponse(
                 "gainedVictoryPoint",
+                "all",
+                new JSONObject(
+                    Map.of(
+                        "amount", victoryPoints,
+                        "player", playerNum
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * Subtracts a single victory point from this player.
+     */
+    public void subtractVictoryPoint() {
+        subtractVictoryPoint(1);
+    }
+
+    /**
+     * Subtracts amount of victory points from player and sends message.
+     * @param amount Number of victory points to add.
+     */
+    public void subtractVictoryPoint(int amount) {
+        victoryPoints += amount;
+        messageQueue.accept(
+            EventResponses.eventResponse(
+                "lostVictoryPoint",
                 "all",
                 new JSONObject(
                     Map.of(

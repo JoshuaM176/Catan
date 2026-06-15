@@ -30,6 +30,11 @@ public class EventManager {
         this.eventMap = eventMap;
     }
     
+    /**
+     * Check if an event triggers a special event, if so create the event and add it to the eventQueue.
+     * @param data The event data returned from an executed action.
+     * @return True if a special event is added to the queue.
+     */
     public boolean processEvent(JSONObject data) {
         String eventName = (String)data.get("event");
         Function<JSONObject, Event> eventFunction = eventMap.get(eventName);
@@ -42,6 +47,10 @@ public class EventManager {
         return true;
     }
 
+    /**
+     * Return the next special event in the eventQueue.
+     * @return The next special event in the eventQueue.
+     */
     public Event next() {
         if(eventQueue.size() == 0) {
             return null;

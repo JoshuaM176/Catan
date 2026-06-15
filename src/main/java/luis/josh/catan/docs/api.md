@@ -24,6 +24,18 @@
     - card
     - player
 
+  - gainedVictoryPoint
+    - amount
+    - player
+
+  - lostVictoryPoint
+    - amount
+    - player
+
+  - specialVictoryPointGained
+    - cardName
+    - player
+
 ## Special Events
 
   - moveRobberEvent
