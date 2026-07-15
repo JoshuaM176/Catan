@@ -209,6 +209,19 @@ public class Player implements ResourceListener{
     public Resource stealResource() {
         ResourceCard randomCard = resources.drawCard();
         if(randomCard == null) { return null; }
+        messageQueue.accept(
+            EventResponses.eventResponse(
+                "spentResource",
+                "all",
+                new JSONObject(
+                    Map.of(
+                        "resource", randomCard.resource().name(),
+                        "amount", 1,
+                        "player", playerNum
+                    )
+                )
+            )
+        );
         return randomCard.resource();
     }
 

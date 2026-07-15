@@ -18,6 +18,7 @@ public abstract class SVP {
 
     public SVP(Player[] players, Consumer<JSONObject> messageQueue) {
         this.players = players;
+        this.messageQueue = messageQueue;
     }
 
     public abstract void performCheck();

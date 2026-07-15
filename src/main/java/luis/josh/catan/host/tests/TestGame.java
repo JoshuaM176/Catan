@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 
 import luis.josh.catan.host.game.DefaultGame;
 import luis.josh.catan.host.game.board.resources.Resource;
+import luis.josh.catan.host.game.gamepieces.Robber;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.DevelopmentCard;
 import luis.josh.catan.host.game.player.Player;
 
@@ -25,6 +26,10 @@ public class TestGame extends DefaultGame{
 
     public void addDevCard(DevelopmentCard card, int playerNum) {
         players[playerNum].addDevCard(card);
+    }
+
+    public void setRobber(int row, int col) {
+        board.tiles[row][col].robber = new Robber();
     }
     
 }
