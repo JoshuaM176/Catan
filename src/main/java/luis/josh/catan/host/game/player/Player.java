@@ -6,7 +6,9 @@ import luis.josh.catan.host.game.gamepieces.cards.ResourceCard;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.DevelopmentCard;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import org.json.simple.JSONObject;
@@ -16,6 +18,7 @@ import java.util.List;
 
 import luis.josh.catan.host.game.actions.messages.EventResponses;
 import luis.josh.catan.host.game.board.Harbor;
+import luis.josh.catan.host.game.board.Vertex;
 import luis.josh.catan.host.game.board.resources.Resource;
 
 public class Player implements ResourceListener{
@@ -23,6 +26,7 @@ public class Player implements ResourceListener{
     CardDeck<DevelopmentCard> devCards = new CardDeck<>();
     public CardDeck<DevelopmentCard> usedDevCards = new CardDeck<>();
     public List<Harbor> harbors = new ArrayList<Harbor>();
+    public Map<Vertex, Set<Vertex>> roadGraph = new HashMap<>();
     private int victoryPoints = 0;
     private Consumer<JSONObject> messageQueue;
     private int playerNum;
@@ -310,6 +314,31 @@ public class Player implements ResourceListener{
                 )
             )
         );
+    }
+
+    /**
+     * Add a connection from vertex1 to vertex2 and from vertex2 to vertex1 in this
+     * player's roadGraph.
+     * @param vertex1
+     * @param vertex2
+     */
+    public void addBiConnection(Vertex vertex1, Vertex vertex2) {
+        addConnection(vertex1, vertex2);
+        addConnection(vertex2, vertex1);
+    }
+
+    /**
+     * Adds a connection from vertex1 to vertex in this player's roadGraph.
+     * @param vertex1
+     * @param vertex2
+     */
+    private void addConnection(Vertex vertex1, Vertex vertex2) {
+        Set<Vertex> v1Cons = roadGraph.get(vertex1);
+        if(v1Cons == null) {
+            v1Cons = new HashSet<>();
+            roadGraph.put(vertex1, v1Cons);
+        }
+        v1Cons.add(vertex2);
     }
 
     @Override

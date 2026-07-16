@@ -85,10 +85,12 @@ public class PlaceRoad implements Action{
         if(edge == 5) {
             tile.vertices[5].addConnection(player);
             tile.vertices[0].addConnection(player);
+            player.addBiConnection(tile.vertices[5], tile.vertices[0]);
         }
         else {
             tile.vertices[edge].addConnection(player);
             tile.vertices[edge+1].addConnection(player);
+            player.addBiConnection(tile.vertices[edge], tile.vertices[edge+1]);
         }
         Action.addPlayer(data, player.playerNum());
         return new JSONObject[]{

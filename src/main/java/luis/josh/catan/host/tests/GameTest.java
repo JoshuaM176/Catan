@@ -67,6 +67,17 @@ public class GameTest {
         action = JSONMethods.placeRoad(0, 3, 3, 5, 0);
         testGame.acceptData(action);
 
+        testGame.addDevCard(new RoadBuilding(), 0);
+        
+        action = JSONMethods.useDevCard(0, "roadBuilding2");
+        testGame.acceptData(action);
+
+        action = JSONMethods.placeRoad(0, 4, 3, 1, 0);
+        testGame.acceptData(action);
+
+        action = JSONMethods.placeRoad(0, 4, 3, 2, 0);
+        testGame.acceptData(action);
+
         testGame.addDevCard((new Knight()), 0);
         testGame.addDevCard((new Knight()), 0);
         testGame.addDevCard((new Knight()), 0);

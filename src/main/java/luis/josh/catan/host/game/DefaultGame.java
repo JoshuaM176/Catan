@@ -31,6 +31,7 @@ import luis.josh.catan.host.game.gamepieces.cards.developmentcards.VictoryPoint;
 import luis.josh.catan.host.game.gamepieces.cards.developmentcards.YearOfPlenty;
 import luis.josh.catan.host.game.player.Player;
 import luis.josh.catan.host.game.svp.LargestArmy;
+import luis.josh.catan.host.game.svp.LongestRoad;
 import luis.josh.catan.host.game.svp.SVP;
 
 public class DefaultGame extends Game{
@@ -147,6 +148,7 @@ public class DefaultGame extends Game{
     protected Map<String, SVP[]> generateSpecialVictoryPoints() {
         Map<String, SVP[]> specialVictoryPoints = new HashMap<>();
         specialVictoryPoints.put("usedDevelopmentCard", new SVP[]{new LargestArmy(players, messageQueue)});
+        specialVictoryPoints.put("placedRoad", new SVP[]{new LongestRoad(players, messageQueue)});
         return specialVictoryPoints;
     }
 }
