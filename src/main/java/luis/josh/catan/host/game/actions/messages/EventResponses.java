@@ -50,6 +50,28 @@ public class EventResponses {
         return eventResponse("usedDevelopmentCard", "self", new JSONObject(Map.of("card", card)));
     }
 
+    public static JSONObject gainedVictoryPoint(int victoryPoints, int playerNum) {
+        return eventResponse(
+            "gainedVictoryPoint",
+            "all",
+            new JSONObject(Map.of(
+                "amount", victoryPoints,
+                "player", playerNum
+            ))
+        );
+    }
+
+    public static JSONObject lostVictoryPoint(int victoryPoints, int playerNum) {
+        return eventResponse(
+            "lostVictoryPoint",
+            "all",
+            new JSONObject(Map.of(
+                "amount", victoryPoints,
+                "player", playerNum
+            ))
+        );
+    }
+
     // Trigger Events
     public static JSONObject moveRobberTrigger() {
         return eventResponse(

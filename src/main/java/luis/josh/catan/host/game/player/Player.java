@@ -276,16 +276,7 @@ public class Player implements ResourceListener{
     public void addVictoryPoint(int amount) {
         victoryPoints += amount;
         messageQueue.accept(
-            EventResponses.eventResponse(
-                "gainedVictoryPoint",
-                "all",
-                new JSONObject(
-                    Map.of(
-                        "amount", victoryPoints,
-                        "player", playerNum
-                    )
-                )
-            )
+            EventResponses.gainedVictoryPoint(amount, playerNum)
         );
     }
 
@@ -303,16 +294,7 @@ public class Player implements ResourceListener{
     public void subtractVictoryPoint(int amount) {
         victoryPoints += amount;
         messageQueue.accept(
-            EventResponses.eventResponse(
-                "lostVictoryPoint",
-                "all",
-                new JSONObject(
-                    Map.of(
-                        "amount", victoryPoints,
-                        "player", playerNum
-                    )
-                )
-            )
+            EventResponses.lostVictoryPoint(amount, playerNum)
         );
     }
 

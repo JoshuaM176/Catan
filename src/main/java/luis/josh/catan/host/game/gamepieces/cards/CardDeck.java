@@ -115,7 +115,7 @@ public class CardDeck<C extends Card> {
         Random random = new Random();
         int totalCards = totalCards();
         if(totalCards > 0){
-            int randomInt = random.nextInt()%totalCards+ 1;
+            int randomInt = Math.abs(random.nextInt()%totalCards)+1;
             for(C card: cards.keySet()) {
                 randomInt -= cards.get(card);
                 if(randomInt <= 0) {

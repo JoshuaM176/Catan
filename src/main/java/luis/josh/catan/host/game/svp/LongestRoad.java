@@ -63,10 +63,6 @@ public class LongestRoad extends SVP{
         for(Vertex root: player.roadGraph.keySet()){
             max = Math.max(max, getLongestRoadRec(player, root));
         }
-        System.out.println("LONGEST ROAD");
-        System.out.println("PLAYER: " + player.playerNum());
-        System.out.println("LENGTH: " + max);
-        System.out.println("\n\n\n\n\n");
         return max;
     }
 }
