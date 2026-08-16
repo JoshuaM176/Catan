@@ -40,7 +40,7 @@ public class CreateBoard {
 				"numberToken": 1
 			},
             {
-                "resource": "LOGS",
+                "resource": "LOG",
                 "numberToken": 1
             },
 			{

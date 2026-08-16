@@ -2,11 +2,15 @@ package luis.josh.catan.host.game.board;
 
 import java.util.Arrays;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import luis.josh.catan.host.game.board.tile.Tile;
 import luis.josh.catan.host.game.board.tile.harborassigner.HarborAssigner;
 import luis.josh.catan.host.game.board.tile.numbertokenassigner.NumberTokenAssigner;
 import luis.josh.catan.host.game.board.tile.tilecreator.TileCreator;
 import luis.josh.catan.host.game.dice.Dice;
+import luis.josh.catan.util.JSONUtil;
 
 public class Board {
     
@@ -115,6 +119,21 @@ public class Board {
         if(tile.vertices[vertex-1].placedItem != null) { return true; }
         if(tile.vertices[vertex+1].placedItem != null) { return true; }
         return false;
+    }
+
+    public JSONArray toJsonObject() {
+        JSONObject[][] jsonBoard = new JSONObject[tiles.length][tiles[0].length];
+        for(int row = 0; row < tiles.length; row++) {
+            for(int col = 0; col < tiles[0].length; col++) {
+                if(tiles[row][col] == null) {
+                    jsonBoard[row][col] = null;
+                }
+                else{
+                    jsonBoard[row][col] = tiles[row][col].toJsonObject();
+                }
+            }
+        }
+        return JSONUtil.MatrixToJSON(jsonBoard);
     }
 
     public String toString() {

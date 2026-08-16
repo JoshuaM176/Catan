@@ -1,5 +1,9 @@
 package luis.josh.catan.host.game.board.tile;
 
+import java.util.Map;
+
+import org.json.simple.JSONObject;
+
 import luis.josh.catan.host.game.board.Edge;
 import luis.josh.catan.host.game.board.Vertex;
 import luis.josh.catan.host.game.board.resources.Resource;
@@ -34,6 +38,12 @@ public abstract class Tile implements DiceRollListener{
 
     public void addResource(ResourceListener resourceListener) {
         resourceListener.addResource(resource);
+    }
+
+    public JSONObject toJsonObject() {
+        return new JSONObject(Map.of(
+            "resource", resource
+        ));
     }
 
     public String toString() {

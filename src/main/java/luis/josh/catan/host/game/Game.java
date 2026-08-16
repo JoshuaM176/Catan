@@ -45,6 +45,9 @@ public abstract class Game {
         this.actionManager = new ActionManager(this.players, generateActions(board, this.players)).setWaitForTurn(() -> turn);
         this.eventManager = new EventManager(board, this.players, this.messageQueue, generateEvents());
         this.specialVictoryPoints = generateSpecialVictoryPoints();
+        processEvent(
+            EventResponses.eventResponse("gameSetup", "all", toJSONObject())
+        );
         startGame();
     }
 
@@ -135,6 +138,12 @@ public abstract class Game {
             new JSONObject(Map.of(
                 "player", turn
             ))
+        ));
+    }
+
+    public JSONObject toJSONObject() {
+        return new JSONObject(Map.of(
+            "board", board.toJsonObject()
         ));
     }
 

@@ -1,5 +1,9 @@
 package luis.josh.catan.host.game.board.tile;
 
+import java.util.Map;
+
+import org.json.simple.JSONObject;
+
 import luis.josh.catan.host.game.board.Vertex;
 import luis.josh.catan.host.game.board.resources.Resource;
 
@@ -22,6 +26,14 @@ public class ResourceTile extends Tile {
                 vertex.addResource(resource);
             }
         }
+    }
+
+    @Override
+    public JSONObject toJsonObject() {
+        return new JSONObject(Map.of(
+            "resource", resource,
+            "numberToken", numberToken
+        ));
     }
 
     public String toString() {

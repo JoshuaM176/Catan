@@ -17,6 +17,19 @@ public class JSONUtil {
         return jsonArray;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> JSONArray MatrixToJSON(T[][] matrix) {
+        JSONArray jsonArray = new JSONArray();
+        for(int row = 0; row < matrix.length; row++) {
+            JSONArray inner = new JSONArray();
+            for(int col = 0; col < matrix[0].length; col++) {
+                inner.add(matrix[row][col]);
+            }
+            jsonArray.add(inner);
+        }
+        return jsonArray;
+    }
+
     /**
      * Takes a json array representing resources and converts it to a hash map. Json should
      * be formatted [{"resource": "RESOURCENAME", "count": 1}, ...].

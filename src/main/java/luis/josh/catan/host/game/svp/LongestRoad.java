@@ -1,10 +1,8 @@
 
 package luis.josh.catan.host.game.svp;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 import java.util.function.Consumer;
 
 import org.json.simple.JSONObject;
