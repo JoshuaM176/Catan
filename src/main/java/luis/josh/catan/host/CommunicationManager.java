@@ -14,12 +14,15 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 
 public class CommunicationManager {
 
     private ServerSocket server;
     private Socket[] playerSockets;
+    private BlockingQueue<String>[] playerQueues;
     private BlockingQueue<String> messageQueue;
     private int connected = 0;
     final public int port;
@@ -28,6 +31,7 @@ public class CommunicationManager {
     public CommunicationManager(int maxPlayers) throws IOException{
         messageQueue = new LinkedBlockingQueue<>(10);
         playerSockets = new Socket[maxPlayers];
+        playerQueues = new LinkedBlockingQueue[maxPlayers];
         server = new ServerSocket(0);
         server.setSoTimeout(1000);
         port = server.getLocalPort();
@@ -42,7 +46,8 @@ public class CommunicationManager {
                 logger.info("Accepting connections");
                 try{
                     playerSockets[connected] = server.accept();
-                    new Thread(new ClientHandler(playerSockets[connected], messageQueue)).start();
+                    playerQueues[connected] = new LinkedBlockingQueue<>(5);
+                    new Thread(new ClientHandler(playerSockets[connected], messageQueue, playerQueues[connected])).start();
                     connected += 1;
                     logger.info("Recieved connection, player count {}", connected);
                 }
@@ -58,6 +63,36 @@ public class CommunicationManager {
         }
     }
 
+    public void send(JSONObject data) {
+        if(data.get("players") == null) {
+            logger.warn("Skipping message because players is null");
+            logger.warn(data.toJSONString());
+            return;
+        }
+        try {
+            String players = (String)data.get("players");
+            if(players.equals("all")) {
+                for(int i = 0; i < connected; i++) {
+                    playerQueues[i].put(data.toJSONString());
+                }
+            }
+            return;
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+        }
+        try{
+            for(Object player : (JSONArray)data.get("players")) {
+                int playerNum = (int)player;
+                playerQueues[playerNum].put(data.toJSONString());
+            }
+            return;
+        }
+        catch (Exception e){
+            logger.debug(e.getMessage());
+        }
+        logger.warn("Failed to cast players, unable to send message: {}", data.toJSONString());
+    }
+
     public int numConnections() {
         return connected;
     }
@@ -68,11 +103,13 @@ public class CommunicationManager {
 
     static class ClientHandler implements Runnable {
         private Socket clientSocket;
-        private BlockingQueue<String> messageQueue;
+        private BlockingQueue<String> inboundQueue;
+        private BlockingQueue<String> outboundQueue;
 
-        public ClientHandler(Socket socket, BlockingQueue<String> messageQueue) {
+        public ClientHandler(Socket socket, BlockingQueue<String> inboundQueue, BlockingQueue<String> outboundQueue) {
             this.clientSocket = socket;
-            this.messageQueue = messageQueue;
+            this.inboundQueue = inboundQueue;
+            this.outboundQueue = outboundQueue;
         }   
 
         @Override
@@ -83,9 +120,12 @@ public class CommunicationManager {
             ) {
                 String line;
                 while ((line = in.readLine()) != null) {
-                    messageQueue.put(line);
+                    inboundQueue.put(line);
                     logger.info("Received from client: " + line);
-                    out.println("Server received: " + line);
+                }
+                while ((line = outboundQueue.poll()) != null) {
+                    out.println(line);
+                    logger.info("Sent to client: " + line);
                 }
             } catch (IOException | InterruptedException e) {
                 logger.warn("Error with client socket: " + e.getMessage());

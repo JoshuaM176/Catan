@@ -15,7 +15,7 @@ public class Host {
         CommunicationManager communicationManager = new CommunicationManager(4);
         int numPlayers = communicationManager.numConnections();
         Consumer<JSONObject> messageQueue = (data) -> {
-            logger.info("Sent message: {}", data);
+            communicationManager.send(data);
         };
         logger.info("Starting game!");
         Game game = new DefaultGame(messageQueue, numPlayers);
