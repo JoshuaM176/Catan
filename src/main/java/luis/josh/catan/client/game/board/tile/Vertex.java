@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import java.lang.Math;
 import java.awt.Rectangle;
 
 import luis.josh.catan.client.game.util.Coordinate;

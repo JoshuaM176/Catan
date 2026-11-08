@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 
 import luis.josh.catan.host.game.DefaultGame;
@@ -19,5 +20,11 @@ public class Host {
         };
         logger.info("Starting game!");
         Game game = new DefaultGame(messageQueue, numPlayers);
+        while(true) {
+            String msg = communicationManager.read();
+            if(msg != null) {
+                game.acceptData((JSONObject)JSONValue.parse(msg));
+            }
+        }
     }
 }

@@ -28,6 +28,7 @@ public class CommunicationManager {
     final public int port;
     protected static final Logger logger = HostLogger.getLogger(Game.class);
 
+    @SuppressWarnings("unchecked")
     public CommunicationManager(int maxPlayers) throws IOException{
         messageQueue = new LinkedBlockingQueue<>(10);
         playerSockets = new Socket[maxPlayers];
@@ -47,7 +48,8 @@ public class CommunicationManager {
                 try{
                     playerSockets[connected] = server.accept();
                     playerQueues[connected] = new LinkedBlockingQueue<>(5);
-                    new Thread(new ClientHandler(playerSockets[connected], messageQueue, playerQueues[connected])).start();
+                    new Thread(new ClientInHandler(playerSockets[connected], messageQueue)).start();
+                    new Thread(new ClientOutHandler(playerSockets[connected], playerQueues[connected])).start();
                     connected += 1;
                     logger.info("Recieved connection, player count {}", connected);
                 }
@@ -101,33 +103,62 @@ public class CommunicationManager {
         return messageQueue.poll();
     }
 
-    static class ClientHandler implements Runnable {
+    static class ClientInHandler implements Runnable {
         private Socket clientSocket;
-        private BlockingQueue<String> inboundQueue;
-        private BlockingQueue<String> outboundQueue;
+        private BlockingQueue<String> queue;
 
-        public ClientHandler(Socket socket, BlockingQueue<String> inboundQueue, BlockingQueue<String> outboundQueue) {
+        public ClientInHandler(Socket socket, BlockingQueue<String> queue) {
             this.clientSocket = socket;
-            this.inboundQueue = inboundQueue;
-            this.outboundQueue = outboundQueue;
+            this.queue = queue;
         }   
 
         @Override
         public void run() {
             try (
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             ) {
-                String line;
-                while ((line = in.readLine()) != null) {
-                    inboundQueue.put(line);
-                    logger.info("Received from client: " + line);
-                }
-                while ((line = outboundQueue.poll()) != null) {
-                    out.println(line);
-                    logger.info("Sent to client: " + line);
+                while(true) {
+                    String msg = in.readLine();
+                    if(msg != null) {
+                        queue.put(msg);
+                        logger.info("Received from client: " + msg);
+                    }
                 }
             } catch (IOException | InterruptedException e) {
+                logger.warn("Error with client socket: " + e.getMessage());
+            } finally {
+                try {
+                    logger.info("Closing client");
+                    clientSocket.close();
+                } catch (IOException e) {
+                    logger.warn("Error closing client socket: " + e.getMessage());
+                }
+            }
+        }
+    }
+
+    static class ClientOutHandler implements Runnable {
+        private Socket clientSocket;
+        private BlockingQueue<String> queue;
+
+        public ClientOutHandler(Socket socket, BlockingQueue<String> queue) {
+            this.clientSocket = socket;
+            this.queue = queue;
+        }   
+
+        @Override
+        public void run() {
+            try (
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            ) {
+                while(true) {
+                    String msg = queue.poll();
+                    if(msg != null) {
+                        out.println(msg);
+                        logger.info("Sent to client: " + msg);
+                    }
+                }
+            } catch (IOException e) {
                 logger.warn("Error with client socket: " + e.getMessage());
             } finally {
                 try {

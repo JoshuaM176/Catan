@@ -15,5 +15,8 @@ public class Client {
         frame.setVisible(true);
         CommunicationManager communicationManager = new CommunicationManager(Integer.parseInt(args[0]));
         communicationManager.send("start game");
+        while(true) {
+            communicationManager.read();
+        }
     }
 }
