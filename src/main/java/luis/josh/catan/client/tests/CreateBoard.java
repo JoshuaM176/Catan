@@ -23,8 +23,7 @@ public class CreateBoard {
 {
 	"board": [
 		[
-			{
-			},
+			null,
             {
 				"resource": "BRICK",
 				"numberToken": 1
@@ -69,6 +68,6 @@ public class CreateBoard {
         board.jPanel.setLocation(200, 200);
         frame.add(board.jPanel);
         frame.setVisible(true);
-				board.redraw(200);
+		board.redraw(200);
     } 
 }

@@ -8,4 +8,8 @@ public enum Resource{
     SHEEP,
     DESERT,
     ANY;
+
+    public String toString() {
+        return '"' + this.name() + '"';
+    }
 }

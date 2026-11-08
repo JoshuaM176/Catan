@@ -50,17 +50,17 @@ public class CommunicationManager {
                     String msg = in.readLine();
                     if(msg != null) {
                         queue.put(msg);
-                        logger.info("Received from client: " + msg);
+                        logger.info("Received from host: " + msg);
                     }
                 }
             } catch (IOException | InterruptedException e) {
-                logger.warn("Error with client socket: " + e.getMessage());
+                logger.warn("Error with socket: " + e.getMessage());
             } finally {
                 try {
-                    logger.info("Closing client");
+                    logger.info("Closing socket");
                     clientSocket.close();
                 } catch (IOException e) {
-                    logger.warn("Error closing client socket: " + e.getMessage());
+                    logger.warn("Error closing socket: " + e.getMessage());
                 }
             }
         }

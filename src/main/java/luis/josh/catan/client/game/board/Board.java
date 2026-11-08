@@ -1,6 +1,7 @@
 package luis.josh.catan.client.game.board;
 
 import java.awt.Dimension;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
@@ -30,7 +31,7 @@ public class Board {
             JSONArray rowArray = (JSONArray)tileMatrix.get(row);
             for(int col = 0; col < ncols; col++) {
                 JSONObject tileData = (JSONObject)rowArray.get(col);
-                if(tileData.get("resource") == null) {
+                if(tileData == null) {
                     tiles[row][col] = null;
                 }
                 else{
@@ -66,5 +67,13 @@ public class Board {
             (int)((size * 1.5) * tiles[0].length + (size * 1.25)),
             (int)(size * (tiles.length + 1))
         );
+    }
+
+    public String toString() {
+        String string = "";
+        for(Tile[] tileArray : tiles) {
+            string += Arrays.toString(tileArray) + "\n";
+        }
+        return string;
     }
 }

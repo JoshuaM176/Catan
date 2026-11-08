@@ -46,7 +46,7 @@ public abstract class Game {
         this.eventManager = new EventManager(board, this.players, this.messageQueue, generateEvents());
         this.specialVictoryPoints = generateSpecialVictoryPoints();
         processEvent(
-            EventResponses.eventResponse("gameSetup", "all", toJSONObject())
+            EventResponses.eventResponse("createBoard", "all", toJSONObject())
         );
         startGame();
     }

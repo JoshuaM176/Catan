@@ -42,7 +42,8 @@ public abstract class Tile implements DiceRollListener{
 
     public JSONObject toJsonObject() {
         return new JSONObject(Map.of(
-            "resource", resource
+            "resource", resource,
+            "numberToken", -1
         ));
     }
 

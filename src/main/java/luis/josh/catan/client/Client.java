@@ -1,22 +1,28 @@
 package luis.josh.catan.client;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-
 import javax.swing.JFrame;
+
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+
+import luis.josh.catan.client.game.DefaultGame;
 
 public class Client {
     
-    public static void main(String[] args) throws NumberFormatException, UnknownHostException, IOException {
-        JFrame frame = new JFrame();
-        frame.setSize(1600, 900);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(null);
-        frame.setVisible(true);
+    public static void main(String[] args) throws Exception {
         CommunicationManager communicationManager = new CommunicationManager(Integer.parseInt(args[0]));
         communicationManager.send("start game");
+        DefaultGame game = new DefaultGame();
         while(true) {
-            communicationManager.read();
+            String msg = communicationManager.read();
+            if(msg != null) {
+                JSONObject jsonObject = (JSONObject)JSONValue.parse(msg);
+                if(jsonObject == null) {
+                    String err = "Failed to parse: " + msg;
+                    throw new Exception(err);
+                }
+                game.acceptData(jsonObject);
+            }
         }
     }
 }
